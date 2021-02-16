@@ -7,4 +7,9 @@ class DatabaseService{
 
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
+  addSampleEvent(){
+    DatabaseReference _testRef = FirebaseDatabase.instance.reference().child("test");
+    _testRef.set("Testvalue");
+  }
+
 }

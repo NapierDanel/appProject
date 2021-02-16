@@ -1,25 +1,33 @@
 import 'dart:ui';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '_db.dart';
 
-
-class ButtonNavigation extends StatefulWidget{
+class ButtonNavigation extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
     return ButtonNavigationState();
   }
-
 }
 
 class ButtonNavigationState extends State<ButtonNavigation> {
   int _selectedIndex = 0;
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
+
+
+  static  TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static  List<Widget> _widgetOptions = <Widget>[
+    RaisedButton(
+      onPressed: () {
+        DatabaseReference _testRef =
+        FirebaseDatabase.instance.reference().child("test");
+        _testRef.set("TestvalueYEAH");
+
+      },
+      child: Text('Add Test to Database', style: TextStyle(fontSize: 20)),
     ),
     Text(
       'Index 1: Business',
