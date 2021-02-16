@@ -12,7 +12,6 @@ class ButtonNavigation extends StatefulWidget{
 
 }
 
-/// This is the private State class that goes with MyStatefulWidget.
 class ButtonNavigationState extends State<ButtonNavigation> {
   int _selectedIndex = 0;
   static const TextStyle optionStyle =

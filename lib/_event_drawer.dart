@@ -26,7 +26,7 @@ class EventDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text('My Profile'),
-            // leading: Icon(Icons.),
+            leading: Icon(Icons.account_circle_outlined),
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Settings()));
@@ -34,6 +34,7 @@ class EventDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text('Settings'),
+            leading: Icon(Icons.settings),
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Settings()));
@@ -41,6 +42,7 @@ class EventDrawer extends StatelessWidget {
           ),
           ListTile(
             title: Text('Login'),
+            leading: Icon(Icons.login),
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Settings()));
