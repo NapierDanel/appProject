@@ -1,10 +1,10 @@
 class User{
 
   final String id;
-  final String firstname;
+  final String firstName;
   final String lastName;
 
   String img;
 
-  User(this.id, this.firstname, this.lastName);
+  User(this.id, this.firstName, this.lastName);
 }

@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_mobile_app_dev/data/_planiant_event.dart';
+import 'package:provider/provider.dart';
 import '_db.dart';
 
 class ButtonNavigation extends StatefulWidget {
@@ -15,8 +17,6 @@ class ButtonNavigation extends StatefulWidget {
 
 class ButtonNavigationState extends State<ButtonNavigation> {
   int _selectedIndex = 0;
-
-
   static  TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static  List<Widget> _widgetOptions = <Widget>[
@@ -30,7 +30,7 @@ class ButtonNavigationState extends State<ButtonNavigation> {
       child: Text('Add Test to Database', style: TextStyle(fontSize: 20)),
     ),
     Text(
-      'Index 1: Business',
+
       style: optionStyle,
     ),
     Text(

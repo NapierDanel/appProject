@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_mobile_app_dev/_firebase_user.dart';
 import '_button_navigation.dart';
 import 'package:flutter_application_mobile_app_dev/_event_drawer.dart';
+import 'package:provider/provider.dart';
 
 
 class MyApp extends StatelessWidget {
@@ -10,24 +13,34 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext contexMyAppt) {
-    return MaterialApp(
-        title: appTitle,
-        home: FutureBuilder(
-          future: _fbApp,
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              print('Here is an Error! ${snapshot.error.toString()}');
-              return Text('Something went wrong');
-            } else if (snapshot.hasData) {
-              return MyHomePage(title: appTitle);
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ),
-    );
+    return MultiProvider(
+
+      /// setup streams and share them without having nest widgets
+        providers: [
+
+          /// Observe the user threw the whole application
+          StreamProvider<User>.value(
+              value: FirebaseAuth.instance.authStateChanges(),
+          )
+        ],
+        child: MaterialApp(
+          title: appTitle,
+          home: FutureBuilder(
+            future: _fbApp,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                print('Here is an Error! ${snapshot.error.toString()}');
+                return Text('Something went wrong');
+              } else if (snapshot.hasData) {
+                return MyHomePage(title: appTitle);
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            },
+          ),
+        ));
   }
 }
 
@@ -45,3 +58,4 @@ class MyHomePage extends StatelessWidget {
     );
   }
 }
+
