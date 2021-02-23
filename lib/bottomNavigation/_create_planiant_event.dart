@@ -1,19 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
 
-class CreatePlaniantEvent extends StatelessWidget {
+class CreatePlaniantEventForm extends StatefulWidget {
+  @override
+  _CreatePlaniantEventFormState createState() =>
+      _CreatePlaniantEventFormState();
+}
+
+class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
   final _formKey = GlobalKey<FormState>();
 
-  String id;
-  String planiantEventName;
-  String planiantEventDescription;
-  String planiantEventBeginDate;
-  String planiantEventEndDate;
-  String planiantEventImg;
-  String planiantEventLocation;
-  String planiantEventLongitude;
-  String planiantEventLatitude;
+  final formControllerPlaniantEventName = TextEditingController();
+  final formControllerPlaniantEventDescription = TextEditingController();
+  final formControllerPlaniantEventBeginDate = TextEditingController();
+  final formControllerPlaniantEventEndDate = TextEditingController();
+  final formControllerPlaniantEventImg = TextEditingController();
+  final formControllerPlaniantEventLocation = TextEditingController();
+  final formControllerPlaniantEventLongitude = TextEditingController();
+  final formControllerPlaniantEventLatitude = TextEditingController();
+
+  @override
+  void dispose() {
+    formControllerPlaniantEventName.dispose();
+    formControllerPlaniantEventDescription.dispose();
+    formControllerPlaniantEventBeginDate.dispose();
+    formControllerPlaniantEventEndDate.dispose();
+    formControllerPlaniantEventImg.dispose();
+    formControllerPlaniantEventLocation.dispose();
+    formControllerPlaniantEventLongitude.dispose();
+    formControllerPlaniantEventLatitude.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +43,7 @@ class CreatePlaniantEvent extends StatelessWidget {
             children: <Widget>[
               /// Event Name
               TextFormField(
+                  controller: formControllerPlaniantEventName,
                   cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.event),
@@ -39,6 +57,7 @@ class CreatePlaniantEvent extends StatelessWidget {
 
               /// Event Description
               TextFormField(
+                  controller: formControllerPlaniantEventDescription,
                   cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.drive_file_rename_outline),
@@ -52,6 +71,7 @@ class CreatePlaniantEvent extends StatelessWidget {
 
               /// Begin date
               TextFormField(
+                  controller: formControllerPlaniantEventBeginDate,
                   cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.access_time),
@@ -65,6 +85,7 @@ class CreatePlaniantEvent extends StatelessWidget {
 
               /// End date
               TextFormField(
+                  controller: formControllerPlaniantEventEndDate,
                   cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.access_time),
@@ -78,6 +99,7 @@ class CreatePlaniantEvent extends StatelessWidget {
 
               /// Location
               TextFormField(
+                  controller: formControllerPlaniantEventLocation,
                   cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.location_on),
@@ -91,6 +113,9 @@ class CreatePlaniantEvent extends StatelessWidget {
 
               /// Location LAT LON
               TextFormField(
+
+                  /// TODO LATLON Handling
+                  controller: formControllerPlaniantEventLatitude,
                   cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.location_on_outlined),

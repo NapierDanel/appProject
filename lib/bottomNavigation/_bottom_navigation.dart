@@ -27,7 +27,7 @@ class ButtonNavigationState extends State<ButtonNavigation> {
       child: Text('Add Test to Database', style: TextStyle(fontSize: 20)),
     ),
     Home(),
-    CreatePlaniantEvent(),
+    CreatePlaniantEventForm(),
     Text(
       'Index 2: School',
       style: optionStyle,
