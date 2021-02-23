@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
 import '../_db.dart';
 
 class CreatePlaniantEventForm extends StatefulWidget {
@@ -38,6 +38,23 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
 
   DatabaseService _dbService = DatabaseService();
 
+  /// Event Image
+  File _image;
+  final picker = ImagePicker();
+  IconData _eventImage = Icons.add_a_photo;
+
+  Future getImage() async {
+    final pickedFile = await picker.getImage(source: ImageSource.gallery);
+
+    setState(() {
+      if (pickedFile != null) {
+        _image = File(pickedFile.path);
+      } else {
+        print('No image selected.');
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     /// TODO Validate InputFields
@@ -48,18 +65,28 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: <Widget>[
-
               /// Select Image
+              FloatingActionButton(
+                onPressed: getImage,
+                tooltip: 'Pick Image',
+                child: Icon(Icons.add_a_photo),
+
+              ),
+              SizedBox(height: 10),
 
               /// Event Name
               TextFormField(
                   controller: formControllerPlaniantEventName,
-                  cursorColor: Theme.of(context).cursorColor,
+                  cursorColor: Theme
+                      .of(context)
+                      .cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.event),
                     labelText: 'Event Name',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -68,12 +95,16 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               /// Event Description
               TextFormField(
                   controller: formControllerPlaniantEventDescription,
-                  cursorColor: Theme.of(context).cursorColor,
+                  cursorColor: Theme
+                      .of(context)
+                      .cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.drive_file_rename_outline),
                     labelText: 'Event Description',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -82,12 +113,16 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               /// Begin date
               TextFormField(
                   controller: formControllerPlaniantEventBeginDate,
-                  cursorColor: Theme.of(context).cursorColor,
+                  cursorColor: Theme
+                      .of(context)
+                      .cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.access_time),
                     labelText: 'Begin date',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -96,12 +131,16 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               /// End date
               TextFormField(
                   controller: formControllerPlaniantEventEndDate,
-                  cursorColor: Theme.of(context).cursorColor,
+                  cursorColor: Theme
+                      .of(context)
+                      .cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.access_time),
                     labelText: 'End date',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -110,12 +149,16 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               /// Location
               TextFormField(
                   controller: formControllerPlaniantEventLocation,
-                  cursorColor: Theme.of(context).cursorColor,
+                  cursorColor: Theme
+                      .of(context)
+                      .cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.location_on),
                     labelText: 'Location',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -124,14 +167,18 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               /// Location LAT LON
               TextFormField(
 
-                  /// TODO LATLON Handling
+                /// TODO LATLON Handling
                   controller: formControllerPlaniantEventLatitude,
-                  cursorColor: Theme.of(context).cursorColor,
+                  cursorColor: Theme
+                      .of(context)
+                      .cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.location_on_outlined),
                     labelText: 'Location LAT LON',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -140,6 +187,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+
                   /// Reset Button
                   RaisedButton(
                     color: Colors.grey,
@@ -149,6 +197,18 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                       _formKey.currentState.reset();
                     },
                     child: Text('Reset'),
+                  ),
+                  SizedBox(width: 25),
+
+                  /// Preview
+                  RaisedButton(
+                    color: Colors.amber[800],
+                    textColor: Colors.white,
+                    onPressed: () {
+                      /// reset all States
+                      _formKey.currentState.reset();
+                    },
+                    child: Text('Preview'),
                   ),
                   SizedBox(width: 25),
 
@@ -182,11 +242,11 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
       FirebaseFirestore.instance
           .runTransaction((Transaction transaction) async {
         CollectionReference reference =
-            FirebaseFirestore.instance.collection('PlaniantEvent');
+        FirebaseFirestore.instance.collection('PlaniantEvent');
         await reference.add({
           "planiantEventName": formControllerPlaniantEventName.text,
           "planiantEventDescription":
-              formControllerPlaniantEventDescription.text,
+          formControllerPlaniantEventDescription.text,
           "planiantEventBeginDate": formControllerPlaniantEventBeginDate.text,
           "planiantEventEndDate": formControllerPlaniantEventEndDate.text,
           "planiantEventImg": formControllerPlaniantEventImg.text,
