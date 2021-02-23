@@ -16,9 +16,7 @@ class PlaniantEvent {
       this.planiantEventEndDate, this.planiantEventImg, this.planiantEventLocation, this.planiantEventLongitude, this.planiantEventLatitude, this.id});
 
   factory PlaniantEvent.fromFirestore(DocumentSnapshot doc){
-
     Map data = doc.data();
-
     return PlaniantEvent(
       id: doc.id,
       planiantEventName: data['planiantEventName'] ?? 'No Name',
