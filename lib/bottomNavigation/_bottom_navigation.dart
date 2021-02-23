@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import '../_home.dart';
+import '_home.dart';
 import '_create_planiant_event.dart';
 
 class ButtonNavigation extends StatefulWidget {
