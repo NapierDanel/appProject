@@ -17,6 +17,7 @@ class ButtonNavigationState extends State<ButtonNavigation> {
   static  TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static  List<Widget> _widgetOptions = <Widget>[
+    Home(),
     RaisedButton(
       onPressed: () {
         DatabaseReference _testRef =
@@ -26,7 +27,6 @@ class ButtonNavigationState extends State<ButtonNavigation> {
       },
       child: Text('Add Test to Database', style: TextStyle(fontSize: 20)),
     ),
-    Home(),
     CreatePlaniantEventForm(),
     Text(
       'Index 2: School',

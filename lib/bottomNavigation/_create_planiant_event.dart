@@ -1,5 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../_db.dart';
 
 class CreatePlaniantEventForm extends StatefulWidget {
   @override
@@ -32,8 +36,11 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
     super.dispose();
   }
 
+  DatabaseService _dbService = DatabaseService();
+
   @override
   Widget build(BuildContext context) {
+    /// TODO Validate InputFields
     return SingleChildScrollView(
       child: Form(
         key: _formKey,
@@ -41,6 +48,9 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: <Widget>[
+
+              /// Select Image
+
               /// Event Name
               TextFormField(
                   controller: formControllerPlaniantEventName,
@@ -148,6 +158,8 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                     textColor: Colors.white,
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
+                        _sendPlaniantEventToServer();
+                        print(formControllerPlaniantEventLatitude.text);
                         print("Valid input... Save to Firebase");
                       } else {
                         print("Invalid Input...");
@@ -162,6 +174,31 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
         ),
       ),
     );
+  }
+
+  _sendPlaniantEventToServer() {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      FirebaseFirestore.instance
+          .runTransaction((Transaction transaction) async {
+        CollectionReference reference =
+            FirebaseFirestore.instance.collection('PlaniantEvent');
+        await reference.add({
+          "planiantEventName": formControllerPlaniantEventName.text,
+          "planiantEventDescription":
+              formControllerPlaniantEventDescription.text,
+          "planiantEventBeginDate": formControllerPlaniantEventBeginDate.text,
+          "planiantEventEndDate": formControllerPlaniantEventEndDate.text,
+          "planiantEventImg": formControllerPlaniantEventImg.text,
+          "planiantEventLocation": formControllerPlaniantEventLocation.text,
+          "planiantEventLongitude": formControllerPlaniantEventLongitude.text,
+          "planiantEventLatitude": formControllerPlaniantEventLatitude.text,
+        });
+      });
+    } else {
+      // validation error
+      setState(() {});
+    }
   }
 }
 
