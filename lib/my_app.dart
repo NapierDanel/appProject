@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_mobile_app_dev/_firebase_user.dart';
-import '_button_navigation.dart';
+import 'package:flutter_application_mobile_app_dev/_db.dart';
+import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
+import 'bottomNavigation/_bottom_navigation.dart';
 import 'package:flutter_application_mobile_app_dev/_event_drawer.dart';
 import 'package:provider/provider.dart';
 
@@ -10,6 +11,8 @@ import 'package:provider/provider.dart';
 class MyApp extends StatelessWidget {
   final appTitle = 'Event App';
   final Future<FirebaseApp> _fbApp = Firebase.initializeApp();
+  final db = DatabaseService();
+
 
   @override
   Widget build(BuildContext contexMyAppt) {
@@ -21,6 +24,11 @@ class MyApp extends StatelessWidget {
           /// Observe the user threw the whole application
           StreamProvider<User>.value(
               value: FirebaseAuth.instance.authStateChanges(),
+          ),
+          
+          /// Observe the planiantEvents
+          StreamProvider<PlaniantEvent>.value(
+            value: db.streamEvent('C306krufbA5eBGR2nJmA'),
           )
         ],
         child: MaterialApp(
