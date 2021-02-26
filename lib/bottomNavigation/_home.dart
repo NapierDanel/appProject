@@ -16,7 +16,7 @@ class Home extends StatelessWidget {
               }
               return ListView(
                 children: snapshot.data.docs.map((data) {
-                  return Text(data['planiantEventBeginDate']);
+                  return Text(data['planiantEventDescription']);
                 }).toList(),
               );
             }));
