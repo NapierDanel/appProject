@@ -2,8 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_mobile_app_dev/_date_picker.dart';
+import 'package:flutter_application_mobile_app_dev/bottomNavigation/_lineup.dart';
 import 'package:image_picker/image_picker.dart';
 import '../_db.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'package:flutter_svg/flutter_svg.dart';
+
+/// Placeholder SVG 
+const String placeholderSVG = 'assets/images/ic_add_photo_alternate_24px.xml';
+
 
 class CreatePlaniantEventForm extends StatefulWidget {
   @override
@@ -13,7 +21,10 @@ class CreatePlaniantEventForm extends StatefulWidget {
 
 class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
   final _formKey = GlobalKey<FormState>();
-
+  String _documentId;
+  
+ 
+  /// Controller to save the User Input
   final formControllerPlaniantEventName = TextEditingController();
   final formControllerPlaniantEventDescription = TextEditingController();
   final formControllerPlaniantEventBeginDate = TextEditingController();
@@ -38,9 +49,14 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
 
   DatabaseService _dbService = DatabaseService();
 
+  /// DateProvider
+  DateProvider dateProvider = DateProvider();
+
   /// Event Image
-  File _image;
+  File _planiant_event_image;
   final picker = ImagePicker();
+  String _uploadedFileURL;
+
   IconData _eventImage = Icons.add_a_photo;
 
   Future getImage() async {
@@ -48,7 +64,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
 
     setState(() {
       if (pickedFile != null) {
-        _image = File(pickedFile.path);
+        _planiant_event_image = File(pickedFile.path);
       } else {
         print('No image selected.');
       }
@@ -65,28 +81,30 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: <Widget>[
+              /// TODO show chosen Image
               /// Select Image
+              Container(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: new Image.asset('images/ic_add_photo_alternate_24px.xml'),
+                ),
+              ),
               FloatingActionButton(
                 onPressed: getImage,
                 tooltip: 'Pick Image',
                 child: Icon(Icons.add_a_photo),
-
               ),
               SizedBox(height: 10),
 
               /// Event Name
               TextFormField(
                   controller: formControllerPlaniantEventName,
-                  cursorColor: Theme
-                      .of(context)
-                      .cursorColor,
+                  cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.event),
                     labelText: 'Event Name',
                     labelStyle: TextStyle(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -95,70 +113,34 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               /// Event Description
               TextFormField(
                   controller: formControllerPlaniantEventDescription,
-                  cursorColor: Theme
-                      .of(context)
-                      .cursorColor,
+                  cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.drive_file_rename_outline),
                     labelText: 'Event Description',
                     labelStyle: TextStyle(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
               SizedBox(height: 20),
 
               /// Begin date
-              TextFormField(
-                  controller: formControllerPlaniantEventBeginDate,
-                  cursorColor: Theme
-                      .of(context)
-                      .cursorColor,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.access_time),
-                    labelText: 'Begin date',
-                    labelStyle: TextStyle(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
-                    ),
-                    border: OutlineInputBorder(),
-                  )),
+              DatePicker("Select Begin Date", "begin"),
               SizedBox(height: 20),
 
               /// End date
-              TextFormField(
-                  controller: formControllerPlaniantEventEndDate,
-                  cursorColor: Theme
-                      .of(context)
-                      .cursorColor,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.access_time),
-                    labelText: 'End date',
-                    labelStyle: TextStyle(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
-                    ),
-                    border: OutlineInputBorder(),
-                  )),
+              DatePicker("Select End Date", "end"),
               SizedBox(height: 20),
 
               /// Location
               TextFormField(
                   controller: formControllerPlaniantEventLocation,
-                  cursorColor: Theme
-                      .of(context)
-                      .cursorColor,
+                  cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.location_on),
                     labelText: 'Location',
                     labelStyle: TextStyle(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -167,27 +149,36 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               /// Location LAT LON
               TextFormField(
 
-                /// TODO LATLON Handling
+                  /// TODO LATLON Handling
                   controller: formControllerPlaniantEventLatitude,
-                  cursorColor: Theme
-                      .of(context)
-                      .cursorColor,
+                  cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.location_on_outlined),
                     labelText: 'Location LAT LON',
                     labelStyle: TextStyle(
-                      color: Theme
-                          .of(context)
-                          .primaryColor,
+                      color: Theme.of(context).primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
               SizedBox(height: 20),
 
+              /// Lineup
+              Center(
+                  child: IconButton(
+                tooltip: 'Add Lineup',
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => LineUpWidget(),
+                      ));
+                },
+              )),
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-
                   /// Reset Button
                   RaisedButton(
                     color: Colors.grey,
@@ -205,8 +196,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                     color: Colors.amber[800],
                     textColor: Colors.white,
                     onPressed: () {
-                      /// reset all States
-                      _formKey.currentState.reset();
+                      /// TODO add Preview Widget
                     },
                     child: Text('Preview'),
                   ),
@@ -218,7 +208,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                     textColor: Colors.white,
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        _sendPlaniantEventToServer();
+                        _sendPlaniantEventToServer(_planiant_event_image);
                         print(formControllerPlaniantEventLatitude.text);
                         print("Valid input... Save to Firebase");
                       } else {
@@ -236,30 +226,58 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
     );
   }
 
-  _sendPlaniantEventToServer() {
+  _sendPlaniantEventToServer(File planiant_event_image) {
+    if (_planiant_event_image == null) {
+      Scaffold.of(context)
+          .showSnackBar(SnackBar(content: Text("No Event Image was selected")));
+      return null;
+    }
+
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       FirebaseFirestore.instance
           .runTransaction((Transaction transaction) async {
         CollectionReference reference =
-        FirebaseFirestore.instance.collection('PlaniantEvent');
+            FirebaseFirestore.instance.collection('PlaniantEvent');
+
+        /// PlaniantEvent Document upload
         await reference.add({
           "planiantEventName": formControllerPlaniantEventName.text,
           "planiantEventDescription":
-          formControllerPlaniantEventDescription.text,
-          "planiantEventBeginDate": formControllerPlaniantEventBeginDate.text,
-          "planiantEventEndDate": formControllerPlaniantEventEndDate.text,
+              formControllerPlaniantEventDescription.text,
+          "planiantEventBeginDate": DateProvider.beginDate,
+          "planiantEventEndDate": DateProvider.endDate,
           "planiantEventImg": formControllerPlaniantEventImg.text,
           "planiantEventLocation": formControllerPlaniantEventLocation.text,
           "planiantEventLongitude": formControllerPlaniantEventLongitude.text,
           "planiantEventLatitude": formControllerPlaniantEventLatitude.text,
-        });
+        }).then((value) => _documentId = value.id);
+
+        print(_documentId);
+
+        /// PlaniantEvent Image upload
+        firebase_storage.UploadTask uploadTask;
+
+        firebase_storage.Reference storage = firebase_storage
+            .FirebaseStorage.instance
+            .ref()
+            .child("PlaniantEventImages")
+            .child("${_documentId}_titleImg");
+
+        print("Upload Image...");
+        uploadTask = storage.putData(await _planiant_event_image.readAsBytes());
       });
     } else {
       // validation error
       setState(() {});
     }
   }
+}
+
+/// Date Provider
+class DateProvider {
+  static String beginDate;
+  static String endDate;
 }
 
 /// State management

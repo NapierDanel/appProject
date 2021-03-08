@@ -27,6 +27,7 @@ class _DatePickerState extends State<DatePicker> {
     if (picked != null && picked != selectedDate)
       print('Selected Date $selectedDate');
     setState(() {
+
       /// Check the context
       switch (widget.dateType) {
         case 'begin':
