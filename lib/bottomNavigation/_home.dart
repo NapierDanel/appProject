@@ -15,7 +15,9 @@ class Home extends StatelessWidget {
                 return CircularProgressIndicator();
               }
               return ListView(
-                children: snapshot.data.docs.map((data) {
+                scrollDirection: Axis.horizontal,
+                children: snapshot.data.docs.map((data)
+                {
                   return Text(data['planiantEventDescription']);
                 }).toList(),
               );
