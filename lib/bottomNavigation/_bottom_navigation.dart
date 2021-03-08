@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import '_event_map.dart';
 import '_home.dart';
 import '_create_planiant_event.dart';
 
@@ -18,15 +19,7 @@ class ButtonNavigationState extends State<ButtonNavigation> {
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   static  List<Widget> _widgetOptions = <Widget>[
     Home(),
-    RaisedButton(
-      onPressed: () {
-        DatabaseReference _testRef =
-        FirebaseDatabase.instance.reference().child("test");
-        _testRef.set("TestvalueYEAH");
-
-      },
-      child: Text('Add Test to Database', style: TextStyle(fontSize: 20)),
-    ),
+    EventMap(),
     CreatePlaniantEventForm(),
     Text(
       'Index 2: School',
