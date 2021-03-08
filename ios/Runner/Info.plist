@@ -47,5 +47,15 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+
+    <key>io.flutter_embedded_views_preview</key>
+    <value>YES</value>
+
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <value>So I can show you Planiant Events around you while you use the App</value>
+
+    <key>NSLocationAlwaysUsageDescription</key>
+    <value>So I can keep you informed about Planiant Events around you</value>
+
 </dict>
 </plist>
