@@ -14,7 +14,6 @@ import 'drawer/_settings.dart';
  * --Animation--
  * Hero
  * Flair
- *
  * --List--
  * Listview
  *

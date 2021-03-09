@@ -9,6 +9,7 @@
 .history
 .svn/
 
+
 # IntelliJ related
 *.iml
 *.ipr
@@ -39,3 +40,9 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+#API Keys
+android/app/src/debug/AndroidManifest.xml
+ios/Runner/AppDelegate.swift
+
+
