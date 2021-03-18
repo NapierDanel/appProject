@@ -30,6 +30,8 @@ class MyApp extends StatelessWidget {
           StreamProvider<PlaniantEvent>.value(
             value: db.streamEvent('C306krufbA5eBGR2nJmA'),
           )
+
+
         ],
         child: MaterialApp(
           title: appTitle,
