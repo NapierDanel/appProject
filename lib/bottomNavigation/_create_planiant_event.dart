@@ -238,7 +238,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
       FirebaseFirestore.instance
           .runTransaction((Transaction transaction) async {
         CollectionReference reference =
-            FirebaseFirestore.instance.collection('PlaniantEvent');
+            FirebaseFirestore.instance.collection('PlaniantEvents');
 
         /// PlaniantEvent Document upload
         await reference.add({
