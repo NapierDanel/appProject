@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:html';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -13,6 +11,8 @@ import '../_create_event_button.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:map_controller/map_controller.dart';
+
+import '../_db.dart';
 
 class EventMap extends StatelessWidget {
   @override
@@ -29,10 +29,11 @@ class FireMap extends StatefulWidget {
 
 class FireMapState extends State<FireMap> {
   GoogleMapController mapController;
-  Location location = new Location();
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   Geoflutterfire geo = Geoflutterfire();
+
+  Location location = new Location();
 
   /// PlaniantEvents
   BehaviorSubject<double> radius = BehaviorSubject();
@@ -41,6 +42,21 @@ class FireMapState extends State<FireMap> {
   /// Subscription
   StreamSubscription subscription;
 
+  LatLng currentPosition;
+
+  @override
+  void initState() {
+    _getUserLocation();
+    super.initState();
+  }
+
+  void _getUserLocation() async {
+    var position = await GeolocatorPlatform.instance.getCurrentPosition();
+
+    setState(() {
+      currentPosition = LatLng(position.latitude, position.longitude);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -51,11 +67,8 @@ class FireMapState extends State<FireMap> {
             target: LatLng(47.72674, 10.31389),
             zoom: 15,
           ),
-          onMapCreated: _onMapCreated,
-          myLocationEnabled: false,
-          zoomControlsEnabled: false,
+          myLocationEnabled: true,
           mapType: MapType.satellite,
-          onCameraMove: _updateMarkers,
         ),
         Positioned(
           bottom: 25,
@@ -70,9 +83,7 @@ class FireMapState extends State<FireMap> {
                 Icons.add,
                 color: Colors.amber,
               ),
-              onPressed: () {
-                _addPlaniantEvent();
-              },
+              onPressed: () {},
             ),
           ),
         )
@@ -80,40 +91,38 @@ class FireMapState extends State<FireMap> {
     );
   }
 
-  _onMapCreated(GoogleMapController controller) {
-    _animateToUser();
-    setState(() {});
-  }
+  showPlaniantEvents() {
+    final FirebaseFirestore _db = FirebaseFirestore.instance;
+    _db.collection('PlaniantEvents').get().then((QuerySnapshot querySnapshot) {
+      if(querySnapshot.docs.isNotEmpty){
+        querySnapshot.docs.map( (event) {
 
-  void _updateMarkers(List<DocumentSnapshot> documentList){
-    print(documentList);
-    documentList.forEach((DocumentSnapshot document) {
-      GeoPoint pos = document.data['position']['geopoint'];
-      double distance = document.data['distance'];
-      var marker = Marker(
-          position: LatLng(pos.latitude, pos.longitude),
-          icon: BitmapDescriptor.defaultMarker,
-
-      );
-
-
-      mapController.add(marker);
+        }
+        );
+      }
     });
   }
+/*
 
-  _animateToUser() async {
-    var position = await location.getLocation();
-    mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        target: LatLng(position.latitude, position.longitude), zoom: 15)));
+  _getMarkerData() async {
+    FirebaseFirestore.instance.collection("PlaniantEvent").get().then(
+            (planiantEvents) => {
+          if(planiantEvents.docs.isNotEmpty){
+            for()
+          }
+        }
+    );
   }
 
   Future<DocumentReference> _addPlaniantEvent() async {
     var position = await location.getLocation();
     GeoFirePoint point =
-        geo.point(latitude: position.latitude, longitude: position.longitude);
+    geo.point(latitude: position.latitude, longitude: position.longitude);
 
     return firestore.collection('PlaniantEventFromMap').add({
       'position': point.data,
     });
   }
+*/
+
 }
