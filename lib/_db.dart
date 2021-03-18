@@ -39,7 +39,7 @@ class DatabaseService {
   }
 
   /// stream a DataCollection from a given String
-  Stream<QuerySnapshot> streamDataCollection() {
-    return _db.collection('PlaniantEvent').snapshots();
+  Stream<QuerySnapshot> streamPlaniantEventsFromFirebase() {
+    return _db.collection('PlaniantEvents').snapshots();
   }
 }
