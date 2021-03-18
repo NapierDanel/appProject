@@ -7,6 +7,6 @@ class Model extends ChangeNotifier {
 
   Stream<QuerySnapshot> fetchPlaniantEventsAsStream() {
     notifyListeners();
-    return _db.streamDataCollection();
+    return _db.streamPlaniantEventsFromFirebase();
   }
 }
