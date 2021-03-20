@@ -4,6 +4,7 @@ import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:rxdart/rxdart.dart';
@@ -19,19 +20,18 @@ class EventMap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Lugares',
-      home: MapSample(),
+      home: PlaniantEventMap(),
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MapSample extends StatefulWidget {
+class PlaniantEventMap extends StatefulWidget {
   @override
-  State<MapSample> createState() => MapSampleState();
+  State<PlaniantEventMap> createState() => MapSampleState();
 }
 
-class MapSampleState extends State<MapSample> {
+class MapSampleState extends State<PlaniantEventMap> {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
   Completer<GoogleMapController> _controller = Completer();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
@@ -48,6 +48,7 @@ class MapSampleState extends State<MapSample> {
       if(docs.docs.isNotEmpty){
         for(int i= 0; i < docs.docs.length; i++) {
           initMarker(docs.docs[i], docs.docs[i].id);
+          //createPlaniantEvent(docs.docs[i]);
         }
       }
     });
@@ -65,6 +66,7 @@ class MapSampleState extends State<MapSample> {
     // creating a new MARKER
     final Marker marker = Marker(
       markerId: markerId,
+
       position: LatLng(num.parse(planiantEventLatitudeString)?.toDouble(), num.parse(planiantEventLongitudeString)?.toDouble()),
       infoWindow: InfoWindow(title: planiantEvent.get('planiantEventName'), snippet: planiantEvent.get('planiantEventDescription')),
     );
