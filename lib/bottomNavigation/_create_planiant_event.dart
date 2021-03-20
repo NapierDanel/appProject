@@ -14,9 +14,14 @@ const String placeholderSVG = 'assets/images/ic_add_photo_alternate_24px.xml';
 
 
 class CreatePlaniantEventForm extends StatefulWidget {
+
+
   @override
   _CreatePlaniantEventFormState createState() =>
       _CreatePlaniantEventFormState();
+
+  CreatePlaniantEventForm();
+
 }
 
 class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
