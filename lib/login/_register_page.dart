@@ -214,7 +214,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               'firstName': firstNameTextEditController.text,
                               'lastName': lastNameTextEditController.text,
                             }).then((userInfoValue) {
-                              Navigator.of(context).pushNamed(HomePage.tag);
+                                Navigator.pop(context);
                             });
                           }).catchError((onError) {
                             processError(onError);

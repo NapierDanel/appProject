@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_mobile_app_dev/login/_home_page.dart';
-import 'package:flutter_application_mobile_app_dev/login/register_page.dart';
+import 'package:flutter_application_mobile_app_dev/login/_register_page.dart';
 
 import '../_firebase_user.dart';
 
@@ -38,12 +38,12 @@ class _LoginPageState extends State<LoginPage> {
     emailController.addListener(onChange);
     passwordController.addListener(onChange);
 
-    final logo = Hero(
+    final planiantLogo = Hero(
       tag: 'hero',
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
-        radius: 48.0,
-        child: Image.asset('assets/logo.png'),
+        radius: 80.0,
+        child: Image.asset('assets/images/planiantIcon.png'),
       ),
     );
 
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () {
-          Navigator.of(context).pushNamed(RegisterPage.tag);
+          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
         },
         padding: EdgeInsets.all(12),
         color: Colors.lightGreen,
@@ -141,7 +141,7 @@ class _LoginPageState extends State<LoginPage> {
               shrinkWrap: true,
               padding: EdgeInsets.only(left: 24.0, right: 24.0),
               children: <Widget>[
-                logo,
+                planiantLogo,
                 SizedBox(height: 24.0),
                 errorMessage,
                 SizedBox(height: 12.0),
