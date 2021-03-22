@@ -4,6 +4,7 @@ import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_application_mobile_app_dev/_planiant_Event_Detail_Screen.dart';
 import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
 import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -14,7 +15,6 @@ import 'package:location/location.dart';
 import 'package:map_controller/map_controller.dart';
 
 import '../_db.dart';
-
 
 class EventMap extends StatelessWidget {
   @override
@@ -37,38 +37,69 @@ class MapSampleState extends State<PlaniantEventMap> {
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
   @override
-  void initState(){
+  void initState() {
     initPlaniantEvents();
     _currentLocation();
     super.initState();
   }
 
-  initPlaniantEvents(){
+  initPlaniantEvents() {
     _database.collection('PlaniantEvents').get().then((docs) {
-      if(docs.docs.isNotEmpty){
-        for(int i= 0; i < docs.docs.length; i++) {
+      if (docs.docs.isNotEmpty) {
+        for (int i = 0; i < docs.docs.length; i++) {
           initMarker(docs.docs[i], docs.docs[i].id);
-          //createPlaniantEvent(docs.docs[i]);
         }
       }
     });
   }
-  void initMarker(planiantEvent, planiantEventId) {
-    print("planiantEventId: " + planiantEventId);
+
+  void initMarker(rawPlaniantEvent, planiantEventId) {
     var markerIdVal = planiantEventId;
     final MarkerId markerId = MarkerId(markerIdVal);
-    print("TO STRING" + planiantEvent.get('planiantEventLatitude').toString());
-    final planiantEventLatitudeString =  planiantEvent.get('planiantEventLatitude').toString();
-    final planiantEventLongitudeString = planiantEvent.get('planiantEventLongitude').toString();
 
-    print(planiantEventLongitudeString + planiantEventLatitudeString);
+    final planiantEventNameString =
+        rawPlaniantEvent.get('planiantEventName').toString();
+    final planiantEventDescriptionString =
+        rawPlaniantEvent.get('planiantEventDescription').toString();
+    final planiantEventBeginDateString =
+        rawPlaniantEvent.get('planiantEventBeginDate').toString();
+    final planiantEventEndDateString =
+        rawPlaniantEvent.get('planiantEventEndDate').toString();
+    final planiantEventImgString =
+        rawPlaniantEvent.get('planiantEventImg').toString();
+    final planiantEventLocationString =
+        rawPlaniantEvent.get('planiantEventLocation').toString();
+    final planiantEventLatitudeString =
+        rawPlaniantEvent.get('planiantEventLatitude').toString();
+    final planiantEventLongitudeString =
+        rawPlaniantEvent.get('planiantEventLongitude').toString();
+
+    PlaniantEvent planiantEvent = new PlaniantEvent(
+      planiantEventName: planiantEventNameString,
+      planiantEventDescription: planiantEventDescriptionString,
+      planiantEventBeginDate: planiantEventBeginDateString,
+      planiantEventEndDate: planiantEventEndDateString,
+      planiantEventLocation: planiantEventLocationString,
+      planiantEventLongitude: planiantEventLongitudeString,
+      planiantEventLatitude: planiantEventLatitudeString,
+    );
 
     // creating a new MARKER
     final Marker marker = Marker(
       markerId: markerId,
-
-      position: LatLng(num.parse(planiantEventLatitudeString)?.toDouble(), num.parse(planiantEventLongitudeString)?.toDouble()),
-      infoWindow: InfoWindow(title: planiantEvent.get('planiantEventName'), snippet: planiantEvent.get('planiantEventDescription')),
+      position: LatLng(num.parse(planiantEventLatitudeString)?.toDouble(),
+          num.parse(planiantEventLongitudeString)?.toDouble()),
+      infoWindow: InfoWindow(
+        title: rawPlaniantEvent.get('planiantEventName'),
+        snippet: rawPlaniantEvent.get('planiantEventDescription'),
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      PlaniantEventDetailScreen(planiantEvent: planiantEvent)));
+        },
+      ),
     );
 
     setState(() {
@@ -77,6 +108,26 @@ class MapSampleState extends State<PlaniantEventMap> {
     });
   }
 
+  PlaniantEvent createPlaniantEventFromFirebase(
+      QueryDocumentSnapshot rawPlaniantEvent, String planiantEventId) {
+    /// Create PlaniantEventObject and add them to map for later use
+    return new PlaniantEvent(
+      planiantEventDescription:
+          rawPlaniantEvent.get('planiantEventDescription').toString(),
+      planiantEventBeginDate:
+          rawPlaniantEvent.get('planiantEventBeginDate').toString(),
+      planiantEventEndDate:
+          rawPlaniantEvent.get('planiantEventEndDate').toString(),
+      planiantEventImg: rawPlaniantEvent.get('planiantEventImg').toString(),
+      planiantEventLocation:
+          rawPlaniantEvent.get('planiantEventLocation').toString(),
+      planiantEventLongitude:
+          rawPlaniantEvent.get('planiantEventLongitude').toString(),
+      planiantEventLatitude:
+          rawPlaniantEvent.get('planiantEventLatitude').toString(),
+      id: rawPlaniantEvent.get('id').toString(),
+    );
+  }
 
   static final CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(37.42796133580664, -122.085749655962),
@@ -90,7 +141,6 @@ class MapSampleState extends State<PlaniantEventMap> {
         mapType: MapType.hybrid,
         trafficEnabled: false,
         buildingsEnabled: false,
-
         initialCameraPosition: _kGooglePlex,
         onMapCreated: (GoogleMapController controller) {
           _controller.complete(controller);
@@ -100,8 +150,6 @@ class MapSampleState extends State<PlaniantEventMap> {
       ),
     );
   }
-
-
 
   void _currentLocation() async {
     final GoogleMapController controller = await _controller.future;
@@ -121,21 +169,7 @@ class MapSampleState extends State<PlaniantEventMap> {
       ),
     ));
   }
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*
 class EventMap extends StatelessWidget {
@@ -262,5 +296,3 @@ class FireMapState extends State<FireMap> {
     });
   }
 */
-
-
