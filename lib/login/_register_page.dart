@@ -6,6 +6,7 @@ import 'package:flutter_application_mobile_app_dev/login/_home_page.dart';
 
 class RegisterPage extends StatefulWidget {
   static String tag = 'register-page';
+
   @override
   _RegisterPageState createState() => new _RegisterPageState();
 }
@@ -201,25 +202,13 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(24),
                       ),
                       onPressed: () {
-                        if (_formKey.currentState.validate()) {
-                          _firebaseAuth
-                              .createUserWithEmailAndPassword(
-                              email: emailTextEditController.text,
-                              password: passwordTextEditController.text)
-                              .then((onValue) {
-                            FirebaseFirestore.instance
-                                .collection('users')
-                                .doc(onValue.user.uid)
-                                .set({
-                              'firstName': firstNameTextEditController.text,
-                              'lastName': lastNameTextEditController.text,
-                            }).then((userInfoValue) {
-                                Navigator.pop(context);
-                            });
-                          }).catchError((onError) {
-                            processError(onError);
-                          });
-                        }
+                        _firebaseAuth.createUserWithEmailAndPassword(
+                            email: emailTextEditController.text,
+                            password: passwordTextEditController.text)
+                            .catchError((onError) {
+                          processError(onError);
+                        }).then((value) => Navigator.pop(context)
+                        );
                       },
                       padding: EdgeInsets.all(12),
                       color: Colors.lightGreen,
