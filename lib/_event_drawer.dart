@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_mobile_app_dev/drawer/_login.dart';
+import 'package:flutter_application_mobile_app_dev/drawer/_my_profile.dart';
 
 import 'drawer/_settings.dart';
 
@@ -29,7 +31,7 @@ class EventDrawer extends StatelessWidget {
             leading: Icon(Icons.account_circle_outlined),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Settings()));
+                  context, MaterialPageRoute(builder: (context) => MyProfile()));
             },
           ),
           ListTile(
@@ -45,7 +47,7 @@ class EventDrawer extends StatelessWidget {
             leading: Icon(Icons.login),
             onTap: () {
               Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => Settings()));
+                  context, MaterialPageRoute(builder: (context) => Login()));
             },
           ),
         ],
