@@ -97,11 +97,10 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () {
-          if (_formKey.currentState.validate()) {
+          print('YEAH' + emailController.text + passwordController.text);
             signIn(emailController.text, passwordController.text)
-                .then((uid) => {Navigator.of(context).pushNamed(HomePage.tag)})
+                .then((uid) => {print("YEAHA"), Navigator.pop(context)})
                 .catchError((error) => {processError(error)});
-          }
         },
         padding: EdgeInsets.all(12),
         color: Colors.lightBlueAccent,
