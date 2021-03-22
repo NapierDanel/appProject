@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
+import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:intl/intl.dart';
 
 class PlaniantEventDetailScreen extends StatelessWidget {
   PlaniantEvent planiantEvent;
@@ -11,7 +13,6 @@ class PlaniantEventDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView(children: [
-
       /// Image Section
       Image.asset(
         'assets/images/drawerHeaderImg.jpeg',
@@ -48,11 +49,17 @@ class PlaniantEventDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            /*3*/
-            Icon(
-              Icons.event,
-              color: Colors.blue,
 
+            /// When the user  Icon Button pressed
+            IconButton(
+              onPressed: () => {
+                addPlaniantEventToCalendar(planiantEvent),
+                SnackBar(content: Text('Event added to calendar')),
+              },
+              icon: new Icon(Icons.event),
+              color: Colors.blue,
+              splashColor: Colors.orange,
+              highlightColor: Colors.blue,
             ),
           ],
         ),
@@ -61,12 +68,10 @@ class PlaniantEventDetailScreen extends StatelessWidget {
       /// Description
       Container(
         padding: const EdgeInsets.all(32),
-        child: Text(
-          planiantEvent.planiantEventDescription,
-          style: TextStyle(
-            fontSize: 12,
-          )
-        ),
+        child: Text(planiantEvent.planiantEventDescription,
+            style: TextStyle(
+              fontSize: 12,
+            )),
       ),
 
       /// Choice Section
@@ -101,5 +106,20 @@ class PlaniantEventDetailScreen extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  addPlaniantEventToCalendar(PlaniantEvent planiantEvent) {
+    Event calendarEvent = Event(
+      title: planiantEvent.planiantEventName,
+      description: planiantEvent.planiantEventDescription,
+      location: planiantEvent.planiantEventLocation,
+      startDate:
+          DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventBeginDate),
+      endDate:
+          DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventEndDate),
+      alarmInterval: Duration(minutes: 30),
+    );
+
+    Add2Calendar.addEvent2Cal(calendarEvent, androidNoUI: false);
   }
 }

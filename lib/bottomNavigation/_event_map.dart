@@ -35,12 +35,22 @@ class MapSampleState extends State<PlaniantEventMap> {
   final FirebaseFirestore _database = FirebaseFirestore.instance;
   Completer<GoogleMapController> _controller = Completer();
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
+  BitmapDescriptor planiantEventIcon;
 
   @override
   void initState() {
+    getPlaniantEventIcon();
     initPlaniantEvents();
     _currentLocation();
     super.initState();
+  }
+
+  getPlaniantEventIcon() async {
+    var planiantEventMarkerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(3,3)), 'assets/images/planiant_Event_Marker.png');
+
+    setState((){
+      this.planiantEventIcon = planiantEventMarkerIcon;
+    });
   }
 
   initPlaniantEvents() {
@@ -84,9 +94,10 @@ class MapSampleState extends State<PlaniantEventMap> {
       planiantEventLatitude: planiantEventLatitudeString,
     );
 
-    // creating a new MARKER
+    /// creating a new MARKER
     final Marker marker = Marker(
       markerId: markerId,
+      icon: planiantEventIcon,
       position: LatLng(num.parse(planiantEventLatitudeString)?.toDouble(),
           num.parse(planiantEventLongitudeString)?.toDouble()),
       infoWindow: InfoWindow(
@@ -130,7 +141,7 @@ class MapSampleState extends State<PlaniantEventMap> {
   }
 
   static final CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
+    target: LatLng(0, 0),
     zoom: 14.4746,
   );
 
@@ -165,7 +176,7 @@ class MapSampleState extends State<PlaniantEventMap> {
       CameraPosition(
         bearing: 0,
         target: LatLng(currentLocation.latitude, currentLocation.longitude),
-        zoom: 16.0,
+        zoom: 14.4746,
       ),
     ));
   }
