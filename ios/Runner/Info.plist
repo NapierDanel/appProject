@@ -57,5 +57,9 @@
     <key>NSLocationAlwaysUsageDescription</key>
     <value>So I can keep you informed about Planiant Events around you</value>
 
+    <key>NSCalendarsUsageDescription</key>
+    <string>So I can create a calendar event</string>
+    <string>So I can create a calendar event</string>
+
 </dict>
 </plist>
