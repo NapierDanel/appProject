@@ -15,6 +15,7 @@ import 'package:location/location.dart';
 import 'package:map_controller/map_controller.dart';
 
 import '../_db.dart';
+import '_create_planiant_event.dart';
 
 class EventMap extends StatelessWidget {
   @override
@@ -32,11 +33,27 @@ class PlaniantEventMap extends StatefulWidget {
 }
 
 class MapSampleState extends State<PlaniantEventMap> {
+  /// Firebase Database
   final FirebaseFirestore _database = FirebaseFirestore.instance;
+
+  /// Map Controller
   Completer<GoogleMapController> _controller = Completer();
+
+  /// User Location
+  LocationData currentLocation;
+  var location = new Location();
+  GoogleMapController controller;
+
+  /// PlaniantEvent Markers
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
   BitmapDescriptor planiantEventIcon;
+  Set<Marker> _markers = {};
 
+  /// Create Event LatLng
+  LatLng createEventLatLng;
+  bool _isVisible = false;
+
+  /// Do this when init
   @override
   void initState() {
     getPlaniantEventIcon();
@@ -46,9 +63,11 @@ class MapSampleState extends State<PlaniantEventMap> {
   }
 
   getPlaniantEventIcon() async {
-    var planiantEventMarkerIcon = await BitmapDescriptor.fromAssetImage(ImageConfiguration(size: Size(3,3)), 'assets/images/planiant_Event_Marker.png');
+    var planiantEventMarkerIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(3, 3)),
+        'assets/images/planiant_Event_Marker.png');
 
-    setState((){
+    setState(() {
       this.planiantEventIcon = planiantEventMarkerIcon;
     });
   }
@@ -147,8 +166,33 @@ class MapSampleState extends State<PlaniantEventMap> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      body: GoogleMap(
+    return new Stack(children: [
+      GoogleMap(
+        onTap: (latLng) {
+          MarkerId markerId = MarkerId('123456789');
+
+          final Marker marker = Marker(
+            markerId: markerId,
+            icon: planiantEventIcon,
+            position: latLng,
+            infoWindow: InfoWindow(
+              title: 'Create Event',
+              snippet: 'Tap here to turn up',
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => CreatePlaniantEventForm(latLng)));
+              },
+            ),
+          );
+
+          setState(() {
+            // adding a new marker to map
+            markers[markerId] = marker;
+          });
+        },
+        zoomControlsEnabled: false,
         mapType: MapType.hybrid,
         trafficEnabled: false,
         buildingsEnabled: false,
@@ -159,13 +203,26 @@ class MapSampleState extends State<PlaniantEventMap> {
         myLocationEnabled: true,
         markers: Set<Marker>.of(markers.values),
       ),
-    );
+      Visibility(
+        visible: _isVisible,
+        child: Positioned(
+          child: ElevatedButton(
+            child: Text('Create Event'),
+            onPressed: () {
+              print('ola');
+            },
+          ),
+          bottom: 30,
+          left: 25,
+          height: 50,
+          width: 250,
+        ),
+      )
+    ]);
   }
 
   void _currentLocation() async {
-    final GoogleMapController controller = await _controller.future;
-    LocationData currentLocation;
-    var location = new Location();
+    controller = await _controller.future;
     try {
       currentLocation = await location.getLocation();
     } on Exception {
@@ -176,6 +233,17 @@ class MapSampleState extends State<PlaniantEventMap> {
       CameraPosition(
         bearing: 0,
         target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        zoom: 14.4746,
+      ),
+    ));
+  }
+
+  _animateToUser() async {
+    var pos = await location.getLocation();
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(pos.latitude, pos.longitude),
         zoom: 14.4746,
       ),
     ));
