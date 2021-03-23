@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_application_mobile_app_dev/_planiant_Event_Detail_Screen.dart';
 import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
@@ -13,6 +15,7 @@ import '../_create_event_button.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
 import 'package:map_controller/map_controller.dart';
+import 'dart:ui' as ui;
 
 import '../_db.dart';
 import '_create_planiant_event.dart';
@@ -51,7 +54,7 @@ class MapSampleState extends State<PlaniantEventMap> {
 
   /// Create Event LatLng
   LatLng createEventLatLng;
-  bool _isVisible = false;
+  BitmapDescriptor addPlaniantEventMarker;
 
   /// Do this when init
   @override
@@ -67,8 +70,14 @@ class MapSampleState extends State<PlaniantEventMap> {
         ImageConfiguration(size: Size(3, 3)),
         'assets/images/planiant_Event_Marker.png');
 
+    /// TODO add Event Icon
+    var addPlaniantEventMarkerIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(3, 3)),
+        'assets/images/create_Planiant_Event_Marker.png');
+
     setState(() {
       this.planiantEventIcon = planiantEventMarkerIcon;
+      this.addPlaniantEventMarker = planiantEventMarkerIcon;
     });
   }
 
@@ -170,21 +179,16 @@ class MapSampleState extends State<PlaniantEventMap> {
       GoogleMap(
         onTap: (latLng) {
           MarkerId markerId = MarkerId('123456789');
-
           final Marker marker = Marker(
             markerId: markerId,
-            icon: planiantEventIcon,
+            icon: addPlaniantEventMarker,
             position: latLng,
-            infoWindow: InfoWindow(
-              title: 'Create Event',
-              snippet: 'Tap here to turn up',
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => CreatePlaniantEventForm(latLng)));
-              },
-            ),
+            onTap: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => CreatePlaniantEventForm(latLng)));
+            },
           );
 
           setState(() {
@@ -202,22 +206,8 @@ class MapSampleState extends State<PlaniantEventMap> {
         },
         myLocationEnabled: true,
         markers: Set<Marker>.of(markers.values),
+        indoorViewEnabled: false,
       ),
-      Visibility(
-        visible: _isVisible,
-        child: Positioned(
-          child: ElevatedButton(
-            child: Text('Create Event'),
-            onPressed: () {
-              print('ola');
-            },
-          ),
-          bottom: 30,
-          left: 25,
-          height: 50,
-          width: 250,
-        ),
-      )
     ]);
   }
 
