@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_mobile_app_dev/_date_picker.dart';
 import 'package:flutter_application_mobile_app_dev/bottomNavigation/_lineup.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import '../_db.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
@@ -13,15 +14,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 const String placeholderSVG = 'assets/images/ic_add_photo_alternate_24px.xml';
 
 
+// ignore: must_be_immutable
 class CreatePlaniantEventForm extends StatefulWidget {
 
+  LatLng eventPosition;
 
   @override
   _CreatePlaniantEventFormState createState() =>
       _CreatePlaniantEventFormState();
 
-  CreatePlaniantEventForm();
-
+  CreatePlaniantEventForm(this.eventPosition);
 }
 
 class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
