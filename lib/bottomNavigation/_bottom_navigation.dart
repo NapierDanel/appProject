@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '_event_map.dart';
 import '_home.dart';
 import '_create_planiant_event.dart';
@@ -20,7 +21,7 @@ class ButtonNavigationState extends State<ButtonNavigation> {
   static  List<Widget> _widgetOptions = <Widget>[
     Home(),
     EventMap(),
-    CreatePlaniantEventForm(),
+    CreatePlaniantEventForm(new LatLng(0,0)),
     Text(
       'Index 2: School',
       style: optionStyle,
