@@ -6,13 +6,17 @@ import 'package:flutter_application_mobile_app_dev/_db.dart';
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    /// Firebase PlaniantEvents
     DatabaseService _dbService = DatabaseService();
     return Scaffold(
         body: StreamBuilder<QuerySnapshot>(
             stream: _dbService.streamPlaniantEventsFromFirebase(),
             builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
               if (!snapshot.hasData) {
-                return CircularProgressIndicator();
+                return Container(
+                    child: Center(
+                  child: CircularProgressIndicator(),
+                ));
               }
               return Column(children: <Widget>[
                 SizedBox(height: 20),
@@ -35,7 +39,9 @@ class Home extends StatelessWidget {
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
                               ListTile(
-                                leading: Icon(Icons.event, size: 70), ///TODO Add leading Event Icon
+                                leading: Icon(Icons.event, size: 70),
+
+                                ///TODO Add leading Event Icon
                                 title: Text(data['planiantEventName'],
                                     style: TextStyle(color: Colors.blue)),
                                 subtitle: Text(data['planiantEventDescription'],
