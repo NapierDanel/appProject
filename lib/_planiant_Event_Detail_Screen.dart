@@ -21,7 +21,13 @@ class PlaniantEventDetailScreen extends StatelessWidget {
       FutureBuilder<String>(
           future: _getStoragePlaniantEventImageURL(planiantEvent.id.toString()),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
-            if (snapshot.hasData) {
+            if (!snapshot.hasData) {
+              return SizedBox(
+                child: LinearProgressIndicator(),
+                width: 60,
+                height: 60,
+              );
+            } else if (snapshot.hasData) {
               this.planiantEventImage = Image.network(
                 snapshot.data,
                 fit: BoxFit.cover,
@@ -178,11 +184,13 @@ class DetailImageScreen extends StatelessWidget {
     return Scaffold(
       body: GestureDetector(
         child: Center(
-          child: Hero(
-            tag: 'imageHero',
-            child: image,
-          ),
-        ),
+            child: Hero(
+          tag: 'imageHero',
+          child: Container(
+              child: PhotoView(
+            imageProvider: image.image,
+          )),
+        )),
         onTap: () {
           Navigator.pop(context);
         },
