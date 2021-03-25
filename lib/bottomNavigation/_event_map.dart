@@ -77,7 +77,7 @@ class MapSampleState extends State<PlaniantEventMap> {
 
     setState(() {
       this.planiantEventIcon = planiantEventMarkerIcon;
-      this.addPlaniantEventMarker = planiantEventMarkerIcon;
+      this.addPlaniantEventMarker = addPlaniantEventMarkerIcon;
     });
   }
 
@@ -85,6 +85,7 @@ class MapSampleState extends State<PlaniantEventMap> {
     _database.collection('PlaniantEvents').get().then((docs) {
       if (docs.docs.isNotEmpty) {
         for (int i = 0; i < docs.docs.length; i++) {
+          print(docs.docs[i].id);
           initMarker(docs.docs[i], docs.docs[i].id);
         }
       }
@@ -120,6 +121,7 @@ class MapSampleState extends State<PlaniantEventMap> {
       planiantEventLocation: planiantEventLocationString,
       planiantEventLongitude: planiantEventLongitudeString,
       planiantEventLatitude: planiantEventLatitudeString,
+      id: planiantEventId
     );
 
     /// creating a new MARKER
@@ -189,6 +191,7 @@ class MapSampleState extends State<PlaniantEventMap> {
                   MaterialPageRoute(
                       builder: (context) => CreatePlaniantEventForm(latLng)));
             },
+
           );
 
           setState(() {
@@ -223,7 +226,7 @@ class MapSampleState extends State<PlaniantEventMap> {
       CameraPosition(
         bearing: 0,
         target: LatLng(currentLocation.latitude, currentLocation.longitude),
-        zoom: 14.4746,
+        zoom: 17,
       ),
     ));
   }
