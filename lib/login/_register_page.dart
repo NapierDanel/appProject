@@ -202,6 +202,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(24),
                       ),
                       onPressed: () {
+                        print("Email: " + emailTextEditController.text + "  PW: " + passwordTextEditController.text);
                         _firebaseAuth.createUserWithEmailAndPassword(
                             email: emailTextEditController.text,
                             password: passwordTextEditController.text)
