@@ -9,19 +9,19 @@ import 'package:image_picker/image_picker.dart';
 import '../_db.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geocoder/geocoder.dart';
+import 'package:geocoding/geocoding.dart';
 
-/// Placeholder SVG 
+/// Placeholder SVG
 const String placeholderSVG = 'assets/images/ic_add_photo_alternate_24px.xml';
-
 
 // ignore: must_be_immutable
 class CreatePlaniantEventForm extends StatefulWidget {
-
   LatLng eventPosition;
 
   @override
   _CreatePlaniantEventFormState createState() =>
-      _CreatePlaniantEventFormState();
+      _CreatePlaniantEventFormState(eventPosition);
 
   CreatePlaniantEventForm(this.eventPosition);
 }
@@ -29,8 +29,12 @@ class CreatePlaniantEventForm extends StatefulWidget {
 class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
   final _formKey = GlobalKey<FormState>();
   String _documentId;
-  
- 
+  LatLng eventPosition;
+
+  _CreatePlaniantEventFormState(LatLng latLng) {
+    this.eventPosition = latLng;
+  }
+
   /// Controller to save the User Input
   final formControllerPlaniantEventName = TextEditingController();
   final formControllerPlaniantEventDescription = TextEditingController();
@@ -93,7 +97,8 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               Container(
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
-                  child: new Image.asset('images/ic_add_photo_alternate_24px.xml'),
+                  child:
+                      new Image.asset('images/ic_add_photo_alternate_24px.xml'),
                 ),
               ),
               FloatingActionButton(
@@ -215,12 +220,14 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                     textColor: Colors.white,
                     onPressed: () {
                       if (_formKey.currentState.validate()) {
-                        _sendPlaniantEventToServer(_planiant_event_image);
+                        _sendPlaniantEventToServer(
+                            _planiant_event_image, eventPosition);
                         print(formControllerPlaniantEventLatitude.text);
                         print("Valid input... Save to Firebase");
                       } else {
                         print("Invalid Input...");
                       }
+                      //Navigator.pop(context);
                     },
                     child: Text('Create'),
                   )
@@ -233,7 +240,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
     );
   }
 
-  _sendPlaniantEventToServer(File planiant_event_image) {
+  _sendPlaniantEventToServer(File planiant_event_image, LatLng eventPosition) {
     if (_planiant_event_image == null) {
       Scaffold.of(context)
           .showSnackBar(SnackBar(content: Text("No Event Image was selected")));
@@ -247,6 +254,19 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
         CollectionReference reference =
             FirebaseFirestore.instance.collection('PlaniantEvents');
 
+        List<Placemark> addresses = await placemarkFromCoordinates(eventPosition.latitude, eventPosition.longitude);
+        String address;
+
+        if(addresses[0] != null){
+          print('Address' +addresses[0].country);
+          address = addresses[0].name;
+        }else{
+          address = 'Nowhere';
+          print('Address' + addresses.first.country);
+
+        }
+
+
         /// PlaniantEvent Document upload
         await reference.add({
           "planiantEventName": formControllerPlaniantEventName.text,
@@ -255,10 +275,10 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
           "planiantEventBeginDate": DateProvider.beginDate,
           "planiantEventEndDate": DateProvider.endDate,
           "planiantEventImg": formControllerPlaniantEventImg.text,
-          "planiantEventLocation": formControllerPlaniantEventLocation.text,
-          "planiantEventLongitude": formControllerPlaniantEventLongitude.text,
-          "planiantEventLatitude": formControllerPlaniantEventLatitude.text,
-        }).then((value) => _documentId = value.id);
+          "planiantEventLocation": address,
+           "planiantEventLongitude": eventPosition.longitude.toString(),
+           "planiantEventLatitude": eventPosition.latitude.toString(),
+        }).then((value) => {_documentId = value.id, print('DOCUMENT ID: ' + _documentId)});
 
         print(_documentId);
 
@@ -340,4 +360,9 @@ class _EventDatePicker extends State<_EventDatePickerState> {
       ),
     );
   }
+}
+
+class PlaniantEventImagePicker extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {}
 }
