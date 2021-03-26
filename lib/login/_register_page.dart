@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -41,6 +42,17 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
+    FirebaseAuth auth = FirebaseAuth.instanceFor(app: secondaryApp);
+
+    FirebaseAuth.instance.authStateChanges().listen((User user) {
+      if (user == null) {
+        print('User is currently signed out!');
+      } else {
+        print('User is signed in!');
+      }
+    });
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
@@ -86,7 +98,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         hintText: 'Email',
                         contentPadding:
-                        EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(32.0)),
                       ),
@@ -112,7 +124,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         hintText: 'First Name',
                         contentPadding:
-                        EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(32.0)),
                       ),
@@ -138,7 +150,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         hintText: 'Last Name',
                         contentPadding:
-                        EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(32.0)),
                       ),
@@ -165,7 +177,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         hintText: 'Password',
                         contentPadding:
-                        EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(32.0)),
                       ),
@@ -189,7 +201,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       decoration: InputDecoration(
                         hintText: 'Confirm Password',
                         contentPadding:
-                        EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(32.0)),
                       ),
@@ -202,14 +214,17 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(24),
                       ),
                       onPressed: () {
-                        print("Email: " + emailTextEditController.text + "  PW: " + passwordTextEditController.text);
-                        _firebaseAuth.createUserWithEmailAndPassword(
-                            email: emailTextEditController.text,
-                            password: passwordTextEditController.text)
+                        print("Email: " +
+                            emailTextEditController.text +
+                            "  PW: " +
+                            passwordTextEditController.text);
+                        _firebaseAuth
+                            .createUserWithEmailAndPassword(
+                                email: emailTextEditController.text,
+                                password: passwordTextEditController.text)
                             .catchError((onError) {
                           processError(onError);
-                        }).then((value) => Navigator.pop(context)
-                        );
+                        }).then((value) => Navigator.pop(context));
                       },
                       padding: EdgeInsets.all(12),
                       color: Colors.lightGreen,
