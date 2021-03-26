@@ -42,9 +42,6 @@ class _RegisterPageState extends State<RegisterPage> {
 
   @override
   Widget build(BuildContext context) {
-    FirebaseApp secondaryApp = Firebase.app('SecondaryApp');
-    FirebaseAuth auth = FirebaseAuth.instanceFor(app: secondaryApp);
-
     FirebaseAuth.instance.authStateChanges().listen((User user) {
       if (user == null) {
         print('User is currently signed out!');
@@ -214,17 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(24),
                       ),
                       onPressed: () {
-                        print("Email: " +
-                            emailTextEditController.text +
-                            "  PW: " +
-                            passwordTextEditController.text);
-                        _firebaseAuth
-                            .createUserWithEmailAndPassword(
-                                email: emailTextEditController.text,
-                                password: passwordTextEditController.text)
-                            .catchError((onError) {
-                          processError(onError);
-                        }).then((value) => Navigator.pop(context));
+                        _login(emailTextEditController.text, passwordTextEditController.text).then((value) => Navigator.pop(context));
                       },
                       padding: EdgeInsets.all(12),
                       color: Colors.lightGreen,
@@ -246,5 +233,22 @@ class _RegisterPageState extends State<RegisterPage> {
                 ],
               ))),
     );
+  }
+
+  _login(String email, String password) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: email,
+              password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'weak-password') {
+        print('The password provided is too weak.');
+      } else if (e.code == 'email-already-in-use') {
+        print('The account already exists for that email.');
+      }
+    } catch (e) {
+      print(e);
+    }
   }
 }
