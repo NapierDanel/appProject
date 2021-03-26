@@ -1,11 +1,17 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_mobile_app_dev/drawer/_login.dart';
 import 'package:flutter_application_mobile_app_dev/drawer/_my_profile.dart';
 
-import 'drawer/_settings.dart';
+import '_settings.dart';
 
 class EventDrawer extends StatelessWidget {
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -30,8 +36,8 @@ class EventDrawer extends StatelessWidget {
             title: Text('My Profile'),
             leading: Icon(Icons.account_circle_outlined),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => MyProfile()));
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => MyProfilePage()));
             },
           ),
           ListTile(
@@ -50,9 +56,28 @@ class EventDrawer extends StatelessWidget {
                   context, MaterialPageRoute(builder: (context) => Login()));
             },
           ),
-        ],
+          ListTile(
+            title: Text('Logout'),
+            leading: Icon(Icons.logout),
+            onTap: () {
+              _logout();
+              final snackBar = SnackBar(
+                content: Text('Logged out'),
+
+              );
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+            },
+          ),
+
+    ],
       ),
     );
+
   }
 
+  _logout() async {
+    await FirebaseAuth.instance.signOut();
+    print('User logged out');
+  }
 }
