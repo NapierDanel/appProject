@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_mobile_app_dev/_db.dart';
 import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
 import 'bottomNavigation/_bottom_navigation.dart';
-import 'package:flutter_application_mobile_app_dev/_event_drawer.dart';
+import 'package:flutter_application_mobile_app_dev/drawer/_event_drawer.dart';
 import 'package:provider/provider.dart';
 
 
