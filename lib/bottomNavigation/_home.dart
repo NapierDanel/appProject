@@ -1,61 +1,48 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_mobile_app_dev/_db.dart';
+import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
+import 'package:provider/provider.dart';
+
+import '../_planiant_Event_Detail_Screen.dart';
 
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     /// Firebase PlaniantEvents
-    DatabaseService _dbService = DatabaseService();
+    List<PlaniantEvent> planiantEvents =
+        Provider.of<List<PlaniantEvent>>(context);
     return Scaffold(
-        body: StreamBuilder<QuerySnapshot>(
-            stream: _dbService.streamPlaniantEventsFromFirebase(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (!snapshot.hasData) {
-                return Container(
-                    child: Center(
-                  child: CircularProgressIndicator(),
-                ));
-              }
-              return Column(children: <Widget>[
-                SizedBox(height: 20),
-                Text('Events'),
-                SizedBox(height: 20),
-                Container(
-                  height: 150,
-                  child: ListView(
-                    scrollDirection: Axis.horizontal,
-                    children: snapshot.data.docs.map((data) {
-                      return Container(
-                        width: 300,
-                        height: 100,
-                        child: Card(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15.0),
-                          ),
-                          color: Colors.amber,
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: <Widget>[
-                              ListTile(
-                                leading: Icon(Icons.event, size: 70),
+        body: ListView.builder(
+      itemCount: planiantEvents.length,
+      itemBuilder: (context, index) {
+        final planiantEvent = planiantEvents[index];
+        return ListTile(
+          title: Text(planiantEvent.planiantEventName),
+          subtitle: Text(planiantEvent.planiantEventDescription),
+          onTap: (){
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        PlaniantEventDetailScreen(planiantEvent: planiantEvent)));
 
-                                ///TODO Add leading Event Icon
-                                title: Text(data['planiantEventName'],
-                                    style: TextStyle(color: Colors.blue)),
-                                subtitle: Text(data['planiantEventDescription'],
-                                    style: TextStyle(color: Colors.blue)),
-                                //onTap: , ///TODO show Detail Event Screen
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
-              ]);
-            }));
+          },
+        );
+      },
+    ));
+  }
+
+  Future<String> _getStoragePlaniantEventImageURL(String id) async {
+    String planiantEventImagePath = 'PlaniantEventImages/' + id + '_titleImg';
+
+    final ref = FirebaseStorage.instance.ref().child(planiantEventImagePath);
+
+    var url = await ref.getDownloadURL();
+    print('URL:' + url);
+    return url;
   }
 }
+
+
+
