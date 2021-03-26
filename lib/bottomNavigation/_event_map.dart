@@ -45,6 +45,8 @@ class MapSampleState extends State<PlaniantEventMap> {
   /// User Location
   LocationData currentLocation;
   var location = new Location();
+
+  /// Map controller for Updates
   GoogleMapController controller;
 
   /// PlaniantEvent Markers
@@ -97,31 +99,31 @@ class MapSampleState extends State<PlaniantEventMap> {
     final MarkerId markerId = MarkerId(markerIdVal);
 
     final planiantEventNameString =
-        rawPlaniantEvent.get('planiantEventName').toString();
+    rawPlaniantEvent.get('planiantEventName').toString();
     final planiantEventDescriptionString =
-        rawPlaniantEvent.get('planiantEventDescription').toString();
+    rawPlaniantEvent.get('planiantEventDescription').toString();
     final planiantEventBeginDateString =
-        rawPlaniantEvent.get('planiantEventBeginDate').toString();
+    rawPlaniantEvent.get('planiantEventBeginDate').toString();
     final planiantEventEndDateString =
-        rawPlaniantEvent.get('planiantEventEndDate').toString();
+    rawPlaniantEvent.get('planiantEventEndDate').toString();
     final planiantEventImgString =
-        rawPlaniantEvent.get('planiantEventImg').toString();
+    rawPlaniantEvent.get('planiantEventImg').toString();
     final planiantEventLocationString =
-        rawPlaniantEvent.get('planiantEventLocation').toString();
+    rawPlaniantEvent.get('planiantEventLocation').toString();
     final planiantEventLatitudeString =
-        rawPlaniantEvent.get('planiantEventLatitude').toString();
+    rawPlaniantEvent.get('planiantEventLatitude').toString();
     final planiantEventLongitudeString =
-        rawPlaniantEvent.get('planiantEventLongitude').toString();
+    rawPlaniantEvent.get('planiantEventLongitude').toString();
 
     PlaniantEvent planiantEvent = new PlaniantEvent(
-      planiantEventName: planiantEventNameString,
-      planiantEventDescription: planiantEventDescriptionString,
-      planiantEventBeginDate: planiantEventBeginDateString,
-      planiantEventEndDate: planiantEventEndDateString,
-      planiantEventLocation: planiantEventLocationString,
-      planiantEventLongitude: planiantEventLongitudeString,
-      planiantEventLatitude: planiantEventLatitudeString,
-      id: planiantEventId
+        planiantEventName: planiantEventNameString,
+        planiantEventDescription: planiantEventDescriptionString,
+        planiantEventBeginDate: planiantEventBeginDateString,
+        planiantEventEndDate: planiantEventEndDateString,
+        planiantEventLocation: planiantEventLocationString,
+        planiantEventLongitude: planiantEventLongitudeString,
+        planiantEventLatitude: planiantEventLatitudeString,
+        id: planiantEventId
     );
 
     /// creating a new MARKER
@@ -154,18 +156,18 @@ class MapSampleState extends State<PlaniantEventMap> {
     /// Create PlaniantEventObject and add them to map for later use
     return new PlaniantEvent(
       planiantEventDescription:
-          rawPlaniantEvent.get('planiantEventDescription').toString(),
+      rawPlaniantEvent.get('planiantEventDescription').toString(),
       planiantEventBeginDate:
-          rawPlaniantEvent.get('planiantEventBeginDate').toString(),
+      rawPlaniantEvent.get('planiantEventBeginDate').toString(),
       planiantEventEndDate:
-          rawPlaniantEvent.get('planiantEventEndDate').toString(),
+      rawPlaniantEvent.get('planiantEventEndDate').toString(),
       planiantEventImg: rawPlaniantEvent.get('planiantEventImg').toString(),
       planiantEventLocation:
-          rawPlaniantEvent.get('planiantEventLocation').toString(),
+      rawPlaniantEvent.get('planiantEventLocation').toString(),
       planiantEventLongitude:
-          rawPlaniantEvent.get('planiantEventLongitude').toString(),
+      rawPlaniantEvent.get('planiantEventLongitude').toString(),
       planiantEventLatitude:
-          rawPlaniantEvent.get('planiantEventLatitude').toString(),
+      rawPlaniantEvent.get('planiantEventLatitude').toString(),
       id: rawPlaniantEvent.get('id').toString(),
     );
   }
@@ -240,6 +242,11 @@ class MapSampleState extends State<PlaniantEventMap> {
         zoom: 14.4746,
       ),
     ));
+  }
+
+  void _uptdateMarksers(List<DocumentSnapshot> documentList){
+    print(documentList);
+
   }
 }
 
