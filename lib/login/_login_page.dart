@@ -4,8 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_application_mobile_app_dev/login/_home_page.dart';
 import 'package:flutter_application_mobile_app_dev/login/_register_page.dart';
 
-import '../_firebase_user.dart';
-
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
   @override

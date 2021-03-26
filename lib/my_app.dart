@@ -23,14 +23,14 @@ class MyApp extends StatelessWidget {
 
           /// Observe the user threw the whole application
           StreamProvider<User>.value(
-              value: FirebaseAuth.instance.authStateChanges(),
+            value: FirebaseAuth.instance.authStateChanges(),
           ),
-          
-          /// Observe the planiantEvents
-          StreamProvider<PlaniantEvent>.value(
-            value: db.streamEvent('C306krufbA5eBGR2nJmA'),
-          )
 
+          /// Observe the planiantEvents
+          StreamProvider<List<PlaniantEvent>>.value(
+            value: DatabaseService().planiantEvents,
+            child: MyApp(),
+          )
 
         ],
         child: MaterialApp(
