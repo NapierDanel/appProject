@@ -95,10 +95,8 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () {
-          print('YEAH' + emailController.text + passwordController.text);
-            signIn(emailController.text, passwordController.text)
-                .then((uid) => {print("YEAHA"), Navigator.pop(context)})
-                .catchError((error) => {processError(error)});
+          _signIn(emailController.text.toString(), passwordController.text.toString());
+          Navigator.pop(context);
         },
         padding: EdgeInsets.all(12),
         color: Colors.lightBlueAccent,
@@ -161,6 +159,22 @@ class _LoginPageState extends State<LoginPage> {
     return user.user.uid;
   }
 
+  void _signIn(String email, String password) async{
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+          email: email,
+          password: password
+      );
+      print(FirebaseAuth.instance.currentUser.email);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        print('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        print('Wrong password provided for that user.');
+      }
+    }
+  }
   void processError(final PlatformException error) {
     if (error.code == "ERROR_USER_NOT_FOUND") {
       setState(() {
