@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application_mobile_app_dev/login/_home_page.dart';
 import 'package:flutter_application_mobile_app_dev/login/_register_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -36,7 +35,7 @@ class _LoginPageState extends State<LoginPage> {
     emailController.addListener(onChange);
     passwordController.addListener(onChange);
 
-    final planiantLogo = Hero(
+    final logo = Hero(
       tag: 'hero',
       child: CircleAvatar(
         backgroundColor: Colors.transparent,
@@ -95,8 +94,11 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () {
-          _signIn(emailController.text.toString(), passwordController.text.toString());
-          Navigator.pop(context);
+          if (_formKey.currentState.validate()) {
+            signIn(emailController.text, passwordController.text)
+                .then((uid) => {Navigator.pop(context)})
+                .catchError((error) => {processError(error)});
+          }
         },
         padding: EdgeInsets.all(12),
         color: Colors.lightBlueAccent,
@@ -119,10 +121,14 @@ class _LoginPageState extends State<LoginPage> {
           borderRadius: BorderRadius.circular(24),
         ),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterPage()));
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      RegisterPage()));
         },
         padding: EdgeInsets.all(12),
-        color: Colors.lightGreen,
+        color: Colors.orange,
         child: Text('Register', style: TextStyle(color: Colors.white)),
       ),
     );
@@ -136,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
               shrinkWrap: true,
               padding: EdgeInsets.only(left: 24.0, right: 24.0),
               children: <Widget>[
-                planiantLogo,
+                logo,
                 SizedBox(height: 24.0),
                 errorMessage,
                 SizedBox(height: 12.0),
@@ -159,22 +165,6 @@ class _LoginPageState extends State<LoginPage> {
     return user.user.uid;
   }
 
-  void _signIn(String email, String password) async{
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .signInWithEmailAndPassword(
-          email: email,
-          password: password
-      );
-      print(FirebaseAuth.instance.currentUser.email);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        print('No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
-      }
-    }
-  }
   void processError(final PlatformException error) {
     if (error.code == "ERROR_USER_NOT_FOUND") {
       setState(() {
