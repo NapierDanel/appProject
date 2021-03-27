@@ -214,7 +214,7 @@ class _RegisterPageState extends State<RegisterPage> {
                         _login(emailTextEditController.text, passwordTextEditController.text).then((value) => Navigator.pop(context));
                       },
                       padding: EdgeInsets.all(12),
-                      color: Colors.lightGreen,
+                      color: Colors.orange,
                       child: Text('Sign Up'.toUpperCase(),
                           style: TextStyle(color: Colors.white)),
                     ),
