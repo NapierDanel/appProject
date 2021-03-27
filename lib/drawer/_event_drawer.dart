@@ -65,8 +65,9 @@ class EventDrawer extends StatelessWidget {
                 content: Text('Logged out'),
 
               );
-              ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              Navigator.pop(context);
             },
           ),
 
