@@ -1,23 +1,13 @@
 import 'dart:async';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_database/ui/utils/stream_subscriber_mixin.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_mobile_app_dev/_planiant_Event_Detail_Screen.dart';
+import 'package:flutter_application_mobile_app_dev/bottomNavigation/_planiant_Event_Detail_Screen.dart';
 import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
-import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:rxdart/rxdart.dart';
-import '../_create_event_button.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:location/location.dart';
-import 'package:map_controller/map_controller.dart';
-import 'dart:ui' as ui;
 
-import '../_db.dart';
+import '../init/_db.dart';
 import '_create_planiant_event.dart';
 
 class EventMap extends StatelessWidget {

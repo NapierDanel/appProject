@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
 import 'package:provider/provider.dart';
 
-import '../_planiant_Event_Detail_Screen.dart';
+import '_planiant_Event_Detail_Screen.dart';
 
 class Home extends StatelessWidget {
   @override
