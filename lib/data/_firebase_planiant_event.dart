@@ -11,9 +11,20 @@ class PlaniantEvent {
   final String planiantEventLocation;
   final String planiantEventLongitude;
   final String planiantEventLatitude;
+  final String planiantEventOrganizerId;
 
-  PlaniantEvent({this.planiantEventName, this.planiantEventDescription, this.planiantEventBeginDate,
-      this.planiantEventEndDate, this.planiantEventImg, this.planiantEventLocation, this.planiantEventLongitude, this.planiantEventLatitude, this.id});
+
+  PlaniantEvent({
+      this.id,
+      this.planiantEventName,
+      this.planiantEventDescription,
+      this.planiantEventBeginDate,
+      this.planiantEventEndDate,
+      this.planiantEventImg,
+      this.planiantEventLocation,
+      this.planiantEventLongitude,
+      this.planiantEventLatitude,
+      this.planiantEventOrganizerId});
 
   factory PlaniantEvent.fromFirestore(DocumentSnapshot doc){
     Map data = doc.data();
@@ -27,6 +38,7 @@ class PlaniantEvent {
       planiantEventLocation: data['planiantEventLocation'] ?? 'No Location',
       planiantEventLatitude: data['planiantEventLongitude'] ?? 'No Longitude',
       planiantEventLongitude: data['planiantEventLatitude'] ?? 'No Latitude',
+      planiantEventOrganizerId: data['planiantEventOrganizerId'] ?? 'No OrganizerId'
     );
   }
 
