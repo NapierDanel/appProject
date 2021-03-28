@@ -7,7 +7,7 @@ import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-import '../init/_db.dart';
+import '../data/_db.dart';
 import '_create_planiant_event.dart';
 
 class EventMap extends StatelessWidget {

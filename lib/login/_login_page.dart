@@ -122,10 +122,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
         onPressed: () {
           Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      RegisterPage()));
+              context, MaterialPageRoute(builder: (context) => RegisterPage()));
         },
         padding: EdgeInsets.all(12),
         color: Colors.orange,
@@ -160,12 +157,21 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<String> signIn(final String email, final String password) async {
-    UserCredential user = await _firebaseAuth.signInWithEmailAndPassword(
-        email: email, password: password);
-    return user.user.uid;
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(email: email, password: password);
+      print(FirebaseAuth.instance.currentUser.email);
+      return userCredential.user.uid;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        _errorMessage = ('No user found for that email.');
+      } else if (e.code == 'wrong-password') {
+        _errorMessage = ('Wrong password provided for that user.');
+      }
+    }
   }
 
-  void processError(final PlatformException error) {
+  void processError(final FirebaseAuthException error) {
     if (error.code == "ERROR_USER_NOT_FOUND") {
       setState(() {
         _errorMessage = "Unable to find user. Please register.";
@@ -177,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       setState(() {
         _errorMessage =
-        "There was an error logging in. Please try again later.";
+            "There was an error logging in. Please try again later.";
       });
     }
   }

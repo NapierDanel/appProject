@@ -9,12 +9,18 @@ import '_planiant_Event_Detail_Screen.dart';
 class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     /// Firebase PlaniantEvents
     List<PlaniantEvent> planiantEvents =
         Provider.of<List<PlaniantEvent>>(context);
+
+    for(PlaniantEvent p in planiantEvents){
+      print(p.planiantEventName);
+    }
+
     return Scaffold(
         body: ListView.builder(
-      itemCount: planiantEvents.length,
+      itemCount: planiantEvents.length != null?planiantEvents.length : 0,
       itemBuilder: (context, index) {
         final planiantEvent = planiantEvents[index];
         return ListTile(

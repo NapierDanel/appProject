@@ -1,10 +1,16 @@
+import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
+
 class User{
 
-  final String id;
-  final String firstName;
-  final String lastName;
+  String id;
+  String firstName;
+  String lastName;
 
-  String img;
+  String imgPath;
 
-  User(this.id, this.firstName, this.lastName);
+  List<PlaniantEvent> acceptPlaniantEvents;
+  List<PlaniantEvent> createdPlaniantEvents;
+
+  User(this.id, this.firstName, this.lastName, this.imgPath);
+
 }

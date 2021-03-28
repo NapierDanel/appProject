@@ -49,8 +49,8 @@ class PlaniantEventDetailScreen extends StatelessWidget {
                   noImageSvgPath,
                   height: 200,
                   width: 300,
-                      color: Colors.orange,
-                      scale: 3,
+                  color: Colors.orange,
+                  scale: 3,
                 ));
               } else if (snapshot.hasError) {
                 return Text('Failure Loading Even Image');
@@ -66,7 +66,7 @@ class PlaniantEventDetailScreen extends StatelessWidget {
 
         /// Title Section
         Container(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(16),
           child: Row(
             children: [
               Expanded(
@@ -78,7 +78,7 @@ class PlaniantEventDetailScreen extends StatelessWidget {
                       child: Text(
                         planiantEvent.planiantEventName,
                         style: TextStyle(
-                          fontSize: 12,
+                          fontSize: 22,
                         ),
                       ),
                     ),
@@ -86,7 +86,7 @@ class PlaniantEventDetailScreen extends StatelessWidget {
                       planiantEvent.planiantEventLocation,
                       style: TextStyle(
                         color: Colors.grey[500],
-                        fontSize: 12,
+                        fontSize: 16,
                       ),
                     ),
                   ],
@@ -100,21 +100,38 @@ class PlaniantEventDetailScreen extends StatelessWidget {
                   SnackBar(content: Text('Event added to calendar')),
                 },
                 icon: new Icon(Icons.event),
+                tooltip: 'Add to your Calendar',
+                iconSize: 45,
                 color: Colors.blue,
                 splashColor: Colors.orange,
-                highlightColor: Colors.blue,
               ),
             ],
           ),
         ),
 
+        /// organizer
+        Card(
+          child: ListTile(
+            leading: Icon(Icons.description),
+            title: Text('Description'),
+          ),
+        ),
+
         /// Description
         Container(
-          padding: const EdgeInsets.all(32),
+          padding: const EdgeInsets.all(26),
           child: Text(planiantEvent.planiantEventDescription,
               style: TextStyle(
                 fontSize: 12,
               )),
+        ),
+
+        /// organizer
+        Card(
+          child: ListTile(
+            leading: Icon(Icons.person),
+            title: Text(planiantEvent.planiantEventOrganizerId?? 'No Organizer'),
+          ),
         ),
 
         /// Choice Section
