@@ -173,26 +173,9 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               /// Location
               TextFormField(
                   controller: formControllerPlaniantEventLocation,
-                  cursorColor: Theme.of(context).cursorColor,
                   decoration: InputDecoration(
                     icon: Icon(Icons.location_on),
-                    labelText: 'Location',
-                    labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    border: OutlineInputBorder(),
-                  )),
-              SizedBox(height: 20),
-
-              /// Location LAT LON
-              TextFormField(
-
-                  /// TODO LATLON Handling
-                  controller: formControllerPlaniantEventLatitude,
-                  cursorColor: Theme.of(context).cursorColor,
-                  decoration: InputDecoration(
-                    icon: Icon(Icons.location_on_outlined),
-                    labelText: 'Location LAT LON',
+                    labelText: 'Location name',
                     labelStyle: TextStyle(
                       color: Theme.of(context).primaryColor,
                     ),

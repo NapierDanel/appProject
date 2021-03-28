@@ -16,6 +16,7 @@ class _DatePickerState extends State<DatePicker> {
   DateTime selectedDate = DateTime.now();
   DateProvider eventPusher = DateProvider();
   final DateFormat formatter = DateFormat('dd.MM.yyyy');
+  String selectDateString = 'select date';
 
   _selectDate(BuildContext context) async {
     final DateTime picked = await showDatePicker(
@@ -27,14 +28,19 @@ class _DatePickerState extends State<DatePicker> {
     if (picked != null && picked != selectedDate)
       print('Selected Date $selectedDate');
     setState(() {
-
       /// Check the context
       switch (widget.dateType) {
         case 'begin':
           DateProvider.beginDate = formatter.format(selectedDate);
+          setState(() {
+            selectDateString = formatter.format(selectedDate).toString();
+          });
           break;
         case 'end':
           DateProvider.endDate = formatter.format(selectedDate);
+          setState(() {
+            selectDateString = formatter.format(selectedDate).toString();
+          });
           break;
         default:
           print('Wrong date string');
@@ -45,13 +51,18 @@ class _DatePickerState extends State<DatePicker> {
 
   @override
   Widget build(BuildContext context) {
-    return RaisedButton(
-      onPressed: () => _selectDate(context),
-      child: Text(
-        'Select date',
-        style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-      ),
-      color: Colors.blue,
-    );
+    return GestureDetector(
+        onTap: () => _selectDate(context),
+        child: TextFormField(
+          enabled: false,
+            decoration: InputDecoration(
+              icon: Icon(Icons.event),
+              labelText: selectDateString,
+              labelStyle: TextStyle(
+                color: Theme.of(context).primaryColor,
+              ),
+              border: OutlineInputBorder(),
+            )
+        ));
   }
 }
