@@ -25,28 +25,27 @@ class _DatePickerState extends State<DatePicker> {
       firstDate: DateTime.now(),
       lastDate: DateTime(2025),
     );
-    if (picked != null && picked != selectedDate)
+
+    if (picked != null && picked != selectedDate) {
       print('Selected Date $selectedDate');
-    setState(() {
-      /// Check the context
-      switch (widget.dateType) {
-        case 'begin':
-          DateProvider.beginDate = formatter.format(selectedDate);
-          setState(() {
-            selectDateString = formatter.format(selectedDate).toString();
-          });
-          break;
-        case 'end':
-          DateProvider.endDate = formatter.format(selectedDate);
-          setState(() {
-            selectDateString = formatter.format(selectedDate).toString();
-          });
-          break;
-        default:
-          print('Wrong date string');
-          break;
-      }
-    });
+      setState(() {
+        /// Check the context
+        switch (widget.dateType) {
+          case 'begin':
+            print(formatter.format(picked).toString());
+            DateProvider.beginDate = formatter.format(picked);
+            selectDateString = formatter.format(picked).toString();
+            break;
+          case 'end':
+            DateProvider.endDate = formatter.format(picked);
+            selectDateString = formatter.format(picked).toString();
+            break;
+          default:
+            print('Wrong date string');
+            break;
+        }
+      });
+    }
   }
 
   @override
@@ -54,7 +53,7 @@ class _DatePickerState extends State<DatePicker> {
     return GestureDetector(
         onTap: () => _selectDate(context),
         child: TextFormField(
-          enabled: false,
+            enabled: false,
             decoration: InputDecoration(
               icon: Icon(Icons.event),
               labelText: selectDateString,
@@ -62,7 +61,6 @@ class _DatePickerState extends State<DatePicker> {
                 color: Theme.of(context).primaryColor,
               ),
               border: OutlineInputBorder(),
-            )
-        ));
+            )));
   }
 }
