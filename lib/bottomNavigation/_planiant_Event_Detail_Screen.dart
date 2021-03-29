@@ -11,6 +11,8 @@ import 'package:photo_view/photo_view.dart';
 class PlaniantEventDetailScreen extends StatelessWidget {
   PlaniantEvent planiantEvent;
   Image planiantEventImage;
+
+  /// Show this image if there is no EventImage
   final String noImageSvgPath = 'assets/images/no-photos.png';
 
   PlaniantEventDetailScreen({Key key, @required this.planiantEvent})
@@ -20,8 +22,11 @@ class PlaniantEventDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(children: [
+
         /// Image Section
         FutureBuilder<String>(
+
+            /// load the event image from firebase
             future:
                 _getStoragePlaniantEventImageURL(planiantEvent.id.toString()),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
@@ -34,6 +39,8 @@ class PlaniantEventDetailScreen extends StatelessWidget {
                       return child;
                     }
                     return Center(
+                      /// Show the progress of loading
+                      heightFactor: 300,
                       child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
                             ? loadingProgress.cumulativeBytesLoaded /
