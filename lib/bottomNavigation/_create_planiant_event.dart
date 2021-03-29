@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_mobile_app_dev/bottomNavigation/_date_picker.dart';
+import 'package:flutter_application_mobile_app_dev/bottomNavigation/_event_map.dart';
 import 'package:flutter_application_mobile_app_dev/bottomNavigation/_lineup.dart';
 import 'package:flutter_application_mobile_app_dev/login/_login_page.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -109,7 +110,6 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: <Widget>[
-              /// TODO show chosen Image
               /// Select Image
               GestureDetector(
                 onTap: getImage,
@@ -125,10 +125,9 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                         )
                       : ClipRRect(
                           child: Image(
-                              image: FileImage(_planiant_event_image),
+                            image: FileImage(_planiant_event_image),
                             width: MediaQuery.of(context).size.width,
                             height: 200,
-
                           ),
                         ),
                 ),
@@ -138,6 +137,12 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
 
               /// Event Name
               TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter a Event name';
+                    }
+                    return null;
+                  },
                   controller: formControllerPlaniantEventName,
                   decoration: InputDecoration(
                     icon: Icon(Icons.event),
@@ -151,6 +156,12 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
 
               /// Event Description
               TextFormField(
+                  validator: (value) {
+                    if (value.isEmpty) {
+                      return 'Please enter a Event description';
+                    }
+                    return null;
+                  },
                   controller: formControllerPlaniantEventDescription,
                   decoration: InputDecoration(
                     icon: Icon(Icons.drive_file_rename_outline),
@@ -183,6 +194,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                   )),
               SizedBox(height: 20),
 
+              /*
               /// Lineup
               Center(
                   child: IconButton(
@@ -195,7 +207,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                         builder: (BuildContext context) => LineUpWidget(),
                       ));
                 },
-              )),
+              )),*/
 
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -212,17 +224,6 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                   ),
                   SizedBox(width: 25),
 
-                  /// Preview
-                  RaisedButton(
-                    color: Colors.amber[800],
-                    textColor: Colors.white,
-                    onPressed: () {
-                      /// TODO add Preview Widget
-                    },
-                    child: Text('Preview'),
-                  ),
-                  SizedBox(width: 25),
-
                   /// Create Event Button
                   RaisedButton(
                     color: Colors.blue,
@@ -233,6 +234,12 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                             _planiant_event_image, eventPosition);
                         print(formControllerPlaniantEventLatitude.text);
                         print("Valid input... Save to Firebase");
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EventMap(),
+                          ),
+                        );
                       } else {
                         print("Invalid Input...");
                       }
@@ -268,8 +275,26 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
         String address;
 
         if (addresses[0] != null) {
-          print('Address' + addresses[0].country);
-          address = addresses[0].name;
+          print('Address: ' +
+              "Country: " +
+              addresses[0].country +
+              "\n" +
+              "ISO Country Code:" +
+              addresses[0].isoCountryCode +
+              "\n" +
+              "Name: " +
+              addresses[0].name +
+              "\n" +
+              "AminArea: " +
+              addresses[0].administrativeArea +
+              "\n" +
+              "Locality: " +
+              addresses[0].locality +
+              "\n" +
+              "Street: " +
+              addresses[0].street +
+              "\n");
+          address = addresses[0].street + " " + addresses[0].administrativeArea;
         } else {
           address = 'Nowhere';
           print('Address' + addresses.first.country);
