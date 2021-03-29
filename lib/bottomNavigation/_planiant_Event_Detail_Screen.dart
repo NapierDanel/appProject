@@ -28,6 +28,20 @@ class PlaniantEventDetailScreen extends StatelessWidget {
               if (snapshot.hasData) {
                 this.planiantEventImage = Image.network(
                   snapshot.data,
+                  loadingBuilder: (BuildContext context, Widget child,
+                      ImageChunkEvent loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child;
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes
+                            : null,
+                      ),
+                    );
+                  },
                   fit: BoxFit.cover,
                   height: 300,
                   semanticLabel: 'Event Image',
@@ -130,7 +144,8 @@ class PlaniantEventDetailScreen extends StatelessWidget {
         Card(
           child: ListTile(
             leading: Icon(Icons.person),
-            title: Text(planiantEvent.planiantEventOrganizerId?? 'No Organizer'),
+            title:
+                Text(planiantEvent.planiantEventOrganizerId ?? 'No Organizer'),
           ),
         ),
 
