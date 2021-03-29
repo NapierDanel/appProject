@@ -293,7 +293,8 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               "\n" +
               "Street: " +
               addresses[0].street +
-              "\n");
+              "\n" +
+              FirebaseAuth.instance.currentUser.displayName);
           address = addresses[0].street + " " + addresses[0].administrativeArea;
         } else {
           address = 'Nowhere';
@@ -311,7 +312,9 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
           "planiantEventLocation": address,
           "planiantEventLongitude": eventPosition.longitude.toString(),
           "planiantEventLatitude": eventPosition.latitude.toString(),
-          "planiantEventOrganizer": FirebaseAuth.instance.currentUser.uid,
+          "planiantEventOrganizerId": FirebaseAuth.instance.currentUser.uid,
+          "planiantEventOrganizerName":
+              FirebaseAuth.instance.currentUser.displayName
         }).then((value) =>
             {_documentId = value.id, print('DOCUMENT ID: ' + _documentId)});
 

@@ -70,7 +70,7 @@ class PlaniantEventDetailScreen extends StatelessWidget {
                   noImageSvgPath,
                   height: 200,
                   width: 300,
-                  color: Colors.orange,
+                  color: Colors.blue,
                   scale: 3,
                 ));
               } else if (snapshot.hasError) {
@@ -130,29 +130,31 @@ class PlaniantEventDetailScreen extends StatelessWidget {
           ),
         ),
 
+        /// Date
+        Card(
+          child: ListTile(
+            leading: Icon(Icons.access_time_rounded),
+            title: Text(planiantEvent.planiantEventBeginDate + "  -  " + planiantEvent.planiantEventEndDate),
+          ),
+        ),
+
+
         /// organizer
         Card(
           child: ListTile(
             leading: Icon(Icons.description),
-            title: Text('Description'),
+            title: Text(planiantEvent.planiantEventDescription),
           ),
         ),
 
-        /// Description
-        Container(
-          padding: const EdgeInsets.all(26),
-          child: Text(planiantEvent.planiantEventDescription,
-              style: TextStyle(
-                fontSize: 12,
-              )),
-        ),
+
 
         /// organizer
         Card(
           child: ListTile(
             leading: Icon(Icons.person),
             title:
-                Text(planiantEvent.planiantEventOrganizerId ?? 'No Organizer'),
+                Text(planiantEvent.planiantEventOrganizerName ?? 'No Organizer'),
           ),
         ),
 
@@ -174,18 +176,20 @@ class PlaniantEventDetailScreen extends StatelessWidget {
   Container _choiceButtonColumn(Color color, IconData icon, String label) {
     return Container(
       color: color,
+      height: 100,
+      width: 100,
       margin: const EdgeInsets.all(10.0),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.orange),
+          Icon(icon, color: Colors.white),
           Container(
             child: Text(
               label,
               style: TextStyle(
                 fontSize: 12,
-                color: color,
+                color: Colors.white,
               ),
             ),
           ),
