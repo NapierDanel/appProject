@@ -21,7 +21,6 @@ class ButtonNavigationState extends State<ButtonNavigation> {
   static  List<Widget> _widgetOptions = <Widget>[
     Home(),
     EventMap(),
-    CreatePlaniantEventForm(new LatLng(0,0)),
     Text(
       'Index 2: School',
       style: optionStyle,
@@ -41,7 +40,7 @@ class ButtonNavigationState extends State<ButtonNavigation> {
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.blue,
+        backgroundColor: Colors.white,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -51,10 +50,7 @@ class ButtonNavigationState extends State<ButtonNavigation> {
             icon: Icon(Icons.location_on_outlined),
             label: 'Map',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.add_box_outlined),
-            label: 'Create Event',
-          ),
+
           BottomNavigationBarItem(
             icon: Icon(Icons.group),
             label: 'Group',
