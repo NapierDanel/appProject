@@ -122,6 +122,7 @@ class MyProfileStage extends State<MyProfilePage> {
                     ),
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 10.0),
+                      // ignore: deprecated_member_use
                       child: RaisedButton(
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(24),
