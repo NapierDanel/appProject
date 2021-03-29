@@ -26,7 +26,13 @@ class EventDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: <Widget>[
           DrawerHeader(
-            child: Text('Planiant'),
+            child: Text('Planiant', style: TextStyle(
+              fontSize: 40,
+              foreground: Paint()
+                ..style = PaintingStyle.stroke
+                ..strokeWidth = 3
+                ..color = Colors.white,
+            ),),
             decoration: BoxDecoration(
               color: Colors.blue,
               image: new DecorationImage(
