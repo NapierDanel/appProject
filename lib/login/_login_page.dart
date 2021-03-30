@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_mobile_app_dev/bottomNavigation/_home.dart';
+import 'package:flutter_application_mobile_app_dev/data/_user.dart';
+import 'package:flutter_application_mobile_app_dev/init/my_app.dart';
+import 'package:flutter_application_mobile_app_dev/login/_home_page.dart';
 import 'package:flutter_application_mobile_app_dev/login/_register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
+
   @override
   _LoginPageState createState() => new _LoginPageState();
 }
@@ -30,6 +35,12 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    if (_firebaseAuth.currentUser != null) {
+      return Container(
+        child: MyApp(),
+      );
+    }
+
     final node = FocusScope.of(context);
 
     emailController.addListener(onChange);
@@ -96,8 +107,11 @@ class _LoginPageState extends State<LoginPage> {
         onPressed: () {
           if (_formKey.currentState.validate()) {
             signIn(emailController.text, passwordController.text)
-                .then((uid) => {Navigator.pop(context)})
-                .catchError((error) => {processError(error)});
+                .catchError((error) => {processError(error)})
+                .then((uid) => {
+                      PlaniantUser.initPlaniantUser(uid),
+                      Navigator.pop(context)
+                    });
           }
         },
         padding: EdgeInsets.all(12),
@@ -132,6 +146,7 @@ class _LoginPageState extends State<LoginPage> {
 
     return Scaffold(
         backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: false,
         body: Center(
           child: Form(
             key: _formKey,
@@ -157,16 +172,25 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   Future<String> signIn(final String email, final String password) async {
+
     try {
+
       UserCredential userCredential = await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       print(FirebaseAuth.instance.currentUser.email);
+
+      PlaniantUser.initPlaniantUser(userCredential.user.uid);
+
       return userCredential.user.uid;
+
+
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         _errorMessage = ('No user found for that email.');
       } else if (e.code == 'wrong-password') {
         _errorMessage = ('Wrong password provided for that user.');
+      } else {
+        _errorMessage = ('Something went wrong');
       }
     }
   }
@@ -186,5 +210,10 @@ class _LoginPageState extends State<LoginPage> {
             "There was an error logging in. Please try again later.";
       });
     }
+  }
+
+  _logout() async {
+    await FirebaseAuth.instance.signOut();
+    print('User logged out');
   }
 }
