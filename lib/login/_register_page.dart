@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_application_mobile_app_dev/data/_user.dart';
 import 'package:flutter_application_mobile_app_dev/login/_home_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -23,14 +24,12 @@ class _RegisterPageState extends State<RegisterPage> {
   final lastNameTextEditController = new TextEditingController();
   final passwordTextEditController = new TextEditingController();
   final confirmPasswordTextEditController = new TextEditingController();
+  final userNameTextEditController = new TextEditingController();
 
   final FocusNode _emailFocus = FocusNode();
-  final FocusNode _firstNameFocus = FocusNode();
-  final FocusNode _lastNameFocus = FocusNode();
   final FocusNode _passwordFocus = FocusNode();
   final FocusNode _confirmPasswordFocus = FocusNode();
-
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  final FocusNode _userNameFocus = FocusNode();
 
   String _errorMessage = '';
 
@@ -51,6 +50,7 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: Colors.white,
       body: Center(
           child: Form(
@@ -75,6 +75,34 @@ class _RegisterPageState extends State<RegisterPage> {
                       textAlign: TextAlign.center,
                     ),
                   ),
+
+                  /// UserName
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8.0),
+                    child: TextFormField(
+                      validator: (value) {
+                        if (value.isEmpty) {
+                          return 'Please enter a Username.';
+                        }
+                        return null;
+                      },
+                      controller: userNameTextEditController,
+                      textInputAction: TextInputAction.next,
+                      focusNode: _userNameFocus,
+                      onFieldSubmitted: (term) {
+                        FocusScope.of(context).requestFocus(_userNameFocus);
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Username',
+                        contentPadding:
+                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(32.0)),
+                      ),
+                    ),
+                  ),
+
+                  /// Email
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: TextFormField(
@@ -90,7 +118,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       textInputAction: TextInputAction.next,
                       focusNode: _emailFocus,
                       onFieldSubmitted: (term) {
-                        FocusScope.of(context).requestFocus(_firstNameFocus);
+                        FocusScope.of(context).requestFocus(_emailFocus);
                       },
                       decoration: InputDecoration(
                         hintText: 'Email',
@@ -101,58 +129,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter your first name.';
-                        }
-                        return null;
-                      },
-                      controller: firstNameTextEditController,
-                      keyboardType: TextInputType.text,
-                      autofocus: false,
-                      textInputAction: TextInputAction.next,
-                      focusNode: _firstNameFocus,
-                      onFieldSubmitted: (term) {
-                        FocusScope.of(context).requestFocus(_lastNameFocus);
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'First Name',
-                        contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32.0)),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: TextFormField(
-                      validator: (value) {
-                        if (value.isEmpty) {
-                          return 'Please enter your last name.';
-                        }
-                        return null;
-                      },
-                      controller: lastNameTextEditController,
-                      keyboardType: TextInputType.text,
-                      autofocus: false,
-                      textInputAction: TextInputAction.next,
-                      focusNode: _lastNameFocus,
-                      onFieldSubmitted: (term) {
-                        FocusScope.of(context).requestFocus(_passwordFocus);
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Last Name',
-                        contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32.0)),
-                      ),
-                    ),
-                  ),
+
+                  /// Password
                   Padding(
                     padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: TextFormField(
@@ -180,30 +158,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0),
-                    child: TextFormField(
-                      autofocus: false,
-                      obscureText: true,
-                      controller: confirmPasswordTextEditController,
-                      focusNode: _confirmPasswordFocus,
-                      textInputAction: TextInputAction.done,
-                      validator: (value) {
-                        if (passwordTextEditController.text.length > 8 &&
-                            passwordTextEditController.text != value) {
-                          return 'Passwords do not match.';
-                        }
-                        return null;
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Confirm Password',
-                        contentPadding:
-                            EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(32.0)),
-                      ),
-                    ),
-                  ),
+
+                  /// Sign Up Button
                   Padding(
                     padding: EdgeInsets.only(top: 10.0),
                     child: RaisedButton(
@@ -211,7 +167,12 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(24),
                       ),
                       onPressed: () {
-                        _login(emailTextEditController.text, passwordTextEditController.text).then((value) => Navigator.pop(context));
+                        PlaniantUser.createPlaniantUser(
+                            emailTextEditController.text.toString(),
+                            passwordTextEditController.text.toString(),
+                            userNameTextEditController.text.toString());
+
+                            Navigator.pop(context);
                       },
                       padding: EdgeInsets.all(12),
                       color: Colors.orange,
@@ -235,20 +196,4 @@ class _RegisterPageState extends State<RegisterPage> {
     );
   }
 
-  _login(String email, String password) async {
-    try {
-      UserCredential userCredential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: email,
-              password: password);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
-      } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
 }
