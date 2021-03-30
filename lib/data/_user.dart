@@ -56,10 +56,8 @@ class PlaniantUser {
       getPlaniantUserInstance().email = emailInput;
       getPlaniantUserInstance().userName = userNameInput;
       getPlaniantUserInstance().id = userCredential.user.uid;
-      getPlaniantUserInstance().organizedPlaniantEvents = List<String>();
-      getPlaniantUserInstance().organizedPlaniantEvents.add("initParty");
-      getPlaniantUserInstance().acceptedPlaniantEvents = List<String>();
-      getPlaniantUserInstance().acceptedPlaniantEvents.add("initParty");
+      getPlaniantUserInstance().organizedPlaniantEvents = [];
+      getPlaniantUserInstance().acceptedPlaniantEvents = [];
       print("Created: " + emailInput);
 
       _usersCollectionReference
