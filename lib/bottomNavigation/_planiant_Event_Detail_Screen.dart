@@ -1,9 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_image/firebase_image.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
 import 'package:add_2_calendar/add_2_calendar.dart';
+import 'package:flutter_application_mobile_app_dev/data/_user.dart';
+import 'package:flutter_application_mobile_app_dev/login/_login_page.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:photo_view/photo_view.dart';
@@ -26,9 +30,9 @@ class PlaniantEventDetailScreen extends StatelessWidget {
         /// Image Section
         FutureBuilder<String>(
 
-            /// load the event image from firebase
+          /// load the event image from firebase
             future:
-                _getStoragePlaniantEventImageURL(planiantEvent.id.toString()),
+            _getStoragePlaniantEventImageURL(planiantEvent.id.toString()),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
                 this.planiantEventImage = Image.network(
@@ -39,12 +43,13 @@ class PlaniantEventDetailScreen extends StatelessWidget {
                       return child;
                     }
                     return Center(
+
                       /// Show the progress of loading
                       heightFactor: 300,
                       child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
                             ? loadingProgress.cumulativeBytesLoaded /
-                                loadingProgress.expectedTotalBytes
+                            loadingProgress.expectedTotalBytes
                             : null,
                       ),
                     );
@@ -67,21 +72,21 @@ class PlaniantEventDetailScreen extends StatelessWidget {
               } else if (!snapshot.hasData) {
                 return SizedBox(
                     child: Image.asset(
-                  noImageSvgPath,
-                  height: 200,
-                  width: 300,
-                  color: Colors.blue,
-                  scale: 3,
-                ));
+                      noImageSvgPath,
+                      height: 200,
+                      width: 300,
+                      color: Colors.blue,
+                      scale: 3,
+                    ));
               } else if (snapshot.hasError) {
                 return Text('Failure Loading Even Image');
               } else {
                 return SizedBox(
                     child: Image.asset(
-                  noImageSvgPath,
-                  height: 200,
-                  width: 300,
-                ));
+                      noImageSvgPath,
+                      height: 200,
+                      width: 300,
+                    ));
               }
             }),
 
@@ -116,7 +121,8 @@ class PlaniantEventDetailScreen extends StatelessWidget {
 
               /// When the user  Icon Button pressed
               IconButton(
-                onPressed: () => {
+                onPressed: () =>
+                {
                   addPlaniantEventToCalendar(planiantEvent),
                   SnackBar(content: Text('Event added to calendar')),
                 },
@@ -134,10 +140,11 @@ class PlaniantEventDetailScreen extends StatelessWidget {
         Card(
           child: ListTile(
             leading: Icon(Icons.access_time_rounded),
-            title: Text(planiantEvent.planiantEventBeginDate + "  -  " + planiantEvent.planiantEventEndDate),
+            title: Text(planiantEvent.planiantEventBeginDate +
+                "  -  " +
+                planiantEvent.planiantEventEndDate),
           ),
         ),
-
 
         /// organizer
         Card(
@@ -147,14 +154,12 @@ class PlaniantEventDetailScreen extends StatelessWidget {
           ),
         ),
 
-
-
         /// organizer
         Card(
           child: ListTile(
             leading: Icon(Icons.person),
-            title:
-                Text(planiantEvent.planiantEventOrganizerName ?? 'No Organizer'),
+            title: Text(
+                planiantEvent.planiantEventOrganizerName ?? 'No Organizer'),
           ),
         ),
 
@@ -173,27 +178,43 @@ class PlaniantEventDetailScreen extends StatelessWidget {
     );
   }
 
-  Container _choiceButtonColumn(Color color, IconData icon, String label) {
-    return Container(
-      color: color,
-      height: 100,
-      width: 100,
-      margin: const EdgeInsets.all(10.0),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: Colors.white),
-          Container(
-            child: Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.white,
+  GestureDetector _choiceButtonColumn(Color color, IconData icon,
+      String label) {
+    return GestureDetector(
+      onTap: () {
+        if (FirebaseAuth.instance.currentUser != null) {
+          if (label == 'I AM IN') {
+            PlaniantUser.getPlaniantUserInstance().addAcceptPlaniantEvent(planiantEvent.id);
+          }
+          if (label == 'I AM OUT') {
+            print(FirebaseAuth.instance.currentUser);
+            PlaniantUser.getPlaniantUserInstance().removeAcceptPlaniantEvent(planiantEvent.id);
+          }
+        } else {
+          return null;
+        }
+      },
+      child: Container(
+        color: color,
+        height: 100,
+        width: 100,
+        margin: const EdgeInsets.all(10.0),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, color: Colors.white),
+            Container(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.white,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -204,9 +225,9 @@ class PlaniantEventDetailScreen extends StatelessWidget {
       description: planiantEvent.planiantEventDescription,
       location: planiantEvent.planiantEventLocation,
       startDate:
-          DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventBeginDate),
+      DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventBeginDate),
       endDate:
-          DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventEndDate),
+      DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventEndDate),
       alarmInterval: Duration(minutes: 30),
     );
 
@@ -234,12 +255,12 @@ class DetailImageScreen extends StatelessWidget {
       body: GestureDetector(
         child: Center(
             child: Hero(
-          tag: 'imageHero',
-          child: Container(
-              child: PhotoView(
-            imageProvider: image.image,
-          )),
-        )),
+              tag: 'imageHero',
+              child: Container(
+                  child: PhotoView(
+                    imageProvider: image.image,
+                  )),
+            )),
         onTap: () {
           Navigator.pop(context);
         },

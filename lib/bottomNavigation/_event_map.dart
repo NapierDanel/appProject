@@ -62,7 +62,6 @@ class MapSampleState extends State<PlaniantEventMap> {
         ImageConfiguration(size: Size(3, 3)),
         'assets/images/planiant_Event_Marker.png');
 
-    /// TODO add Event Icon
     var addPlaniantEventMarkerIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(size: Size(3, 3)),
         'assets/images/create_Planiant_Event_Marker.png');
@@ -183,7 +182,6 @@ class MapSampleState extends State<PlaniantEventMap> {
                   MaterialPageRoute(
                       builder: (context) => CreatePlaniantEventForm(latLng)));
             },
-
           );
 
           setState(() {
