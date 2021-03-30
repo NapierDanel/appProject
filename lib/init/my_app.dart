@@ -21,11 +21,6 @@ class MyApp extends StatelessWidget {
       /// setup streams and share them without having nest widgets
         providers: [
 
-          /// Observe the user threw the whole application
-          StreamProvider<User>.value(
-            value: FirebaseAuth.instance.authStateChanges(),
-          ),
-
           /// Observe the planiantEvents
           StreamProvider<List<PlaniantEvent>>.value(
             value: DatabaseService().planiantEvents,
