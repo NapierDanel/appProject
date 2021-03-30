@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class PlaniantEvent {
+
   final String id;
   final String planiantEventName;
   final String planiantEventDescription;

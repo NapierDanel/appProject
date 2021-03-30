@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_application_mobile_app_dev/bottomNavigation/_home.dart';
-import 'package:flutter_application_mobile_app_dev/data/_user.dart';
+import 'package:flutter_application_mobile_app_dev/ui/views/_home.dart';
+import 'package:flutter_application_mobile_app_dev/services/dataclasses/_user.dart';
 import 'package:flutter_application_mobile_app_dev/init/my_app.dart';
 import 'package:flutter_application_mobile_app_dev/login/_home_page.dart';
-import 'package:flutter_application_mobile_app_dev/login/_register_page.dart';
+import 'package:flutter_application_mobile_app_dev/ui/views/_register_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginPage extends StatefulWidget {

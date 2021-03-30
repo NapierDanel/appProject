@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
+import 'package:flutter_application_mobile_app_dev/services/dataclasses/_firebase_planiant_event.dart';
 
 class PlaniantUser {
   String id;
@@ -44,6 +44,7 @@ class PlaniantUser {
     PlaniantUser.fromData(rawUser.data());
   }
 
+  /// Create a Planiant User and set the attributes
   static createPlaniantUser(
       String emailInput, String passwordInput, String userNameInput) async {
     print("createPlaniantUser: " + emailInput + passwordInput);
@@ -78,6 +79,7 @@ class PlaniantUser {
     }
   }
 
+  /// When the user Favs. an Event add it to his firebase doc
   addAcceptPlaniantEvent(String id) {
     print(id);
 
@@ -90,6 +92,7 @@ class PlaniantUser {
         .update(planiantUser.toJson());
   }
 
+  /// When the user unfavs. an Event add it to his firebase doc
   removeAcceptPlaniantEvent(String id){
     if(PlaniantUser.getPlaniantUserInstance().acceptedPlaniantEvents.contains(id)){
       PlaniantUser.getPlaniantUserInstance().acceptedPlaniantEvents.remove(id);
@@ -101,6 +104,7 @@ class PlaniantUser {
 
   }
 
+  /// For Firebase serialisation
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -111,6 +115,7 @@ class PlaniantUser {
     };
   }
 
+  /// For Firebase serialisation
   PlaniantUser.fromData(Map<String, dynamic> data)
       : id = data['id'],
         userName = data['userName'],

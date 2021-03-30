@@ -3,12 +3,13 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_mobile_app_dev/bottomNavigation/_date_picker.dart';
-import 'package:flutter_application_mobile_app_dev/bottomNavigation/_event_map.dart';
-import 'package:flutter_application_mobile_app_dev/login/_login_page.dart';
+import 'package:flutter_application_mobile_app_dev/ui/views/_date_picker.dart';
+import 'package:flutter_application_mobile_app_dev/ui/views/_event_map.dart';
+import 'package:flutter_application_mobile_app_dev/ui/views/_login_page.dart';
+import 'package:geoflutterfire/geoflutterfire.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
-import '../data/_db.dart';
+import '../../services/dataclasses/_db.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:geocoder/geocoder.dart';
 import 'package:geocoding/geocoding.dart';
@@ -108,26 +109,30 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
           padding: const EdgeInsets.all(20),
           child: Column(
             children: <Widget>[
+
               /// Select Image
               GestureDetector(
                 onTap: getImage,
                 child: Center(
                   child: _planiant_event_image == null
                       ? CircleAvatar(
-                          radius: 70.0,
-                          child: Icon(
-                            Icons.camera_alt_outlined,
-                            size: 55,
-                            color: Colors.white,
-                          ),
-                        )
+                    radius: 70.0,
+                    child: Icon(
+                      Icons.camera_alt_outlined,
+                      size: 55,
+                      color: Colors.white,
+                    ),
+                  )
                       : ClipRRect(
-                          child: Image(
-                            image: FileImage(_planiant_event_image),
-                            width: MediaQuery.of(context).size.width,
-                            height: 200,
-                          ),
-                        ),
+                    child: Image(
+                      image: FileImage(_planiant_event_image),
+                      width: MediaQuery
+                          .of(context)
+                          .size
+                          .width,
+                      height: 200,
+                    ),
+                  ),
                 ),
               ),
 
@@ -146,7 +151,9 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                     icon: Icon(Icons.event),
                     labelText: 'Event Name',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -165,7 +172,9 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                     icon: Icon(Icons.drive_file_rename_outline),
                     labelText: 'Event Description',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -186,7 +195,9 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
                     icon: Icon(Icons.location_on),
                     labelText: 'Location name',
                     labelStyle: TextStyle(
-                      color: Theme.of(context).primaryColor,
+                      color: Theme
+                          .of(context)
+                          .primaryColor,
                     ),
                     border: OutlineInputBorder(),
                   )),
@@ -210,6 +221,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+
                   /// Reset Button
                   RaisedButton(
                     color: Colors.grey,
@@ -262,11 +274,16 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
     }
 
     if (_formKey.currentState.validate()) {
+      ///Geoflutterfire geo = Geoflutterfire();
+      ///GeoFirePoint firePointPlaniantEvent = geo.point(
+      ///latitude: eventPosition.latitude, longitude: eventPosition.longitude);
+
+
       _formKey.currentState.save();
       FirebaseFirestore.instance
           .runTransaction((Transaction transaction) async {
         CollectionReference reference =
-            FirebaseFirestore.instance.collection('PlaniantEvents');
+        FirebaseFirestore.instance.collection('PlaniantEvents');
 
         List<Placemark> addresses = await placemarkFromCoordinates(
             eventPosition.latitude, eventPosition.longitude);
@@ -290,9 +307,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
               addresses[0].locality +
               "\n" +
               "Street: " +
-              addresses[0].street +
-              "\n" +
-              FirebaseAuth.instance.currentUser.displayName);
+              addresses[0].street);
           address = addresses[0].street + " " + addresses[0].administrativeArea;
         } else {
           address = 'Nowhere';
@@ -303,7 +318,7 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
         await reference.add({
           "planiantEventName": formControllerPlaniantEventName.text,
           "planiantEventDescription":
-              formControllerPlaniantEventDescription.text,
+          formControllerPlaniantEventDescription.text,
           "planiantEventBeginDate": DateProvider.beginDate,
           "planiantEventEndDate": DateProvider.endDate,
           "planiantEventImg": formControllerPlaniantEventImg.text,
@@ -312,9 +327,9 @@ class _CreatePlaniantEventFormState extends State<CreatePlaniantEventForm> {
           "planiantEventLatitude": eventPosition.latitude.toString(),
           "planiantEventOrganizerId": FirebaseAuth.instance.currentUser.uid,
           "planiantEventOrganizerName":
-              FirebaseAuth.instance.currentUser.displayName
+          FirebaseAuth.instance.currentUser.displayName,
         }).then((value) =>
-            {_documentId = value.id, print('DOCUMENT ID: ' + _documentId)});
+        {_documentId = value.id, print('DOCUMENT ID: ' + _documentId)});
 
         print(_documentId);
 

@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_mobile_app_dev/data/_db.dart';
-import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
+import 'package:flutter_application_mobile_app_dev/services/dataclasses/_db.dart';
+import 'package:flutter_application_mobile_app_dev/services/dataclasses/_firebase_planiant_event.dart';
 import '../bottomNavigation/_bottom_navigation.dart';
 import 'package:flutter_application_mobile_app_dev/drawer/_event_drawer.dart';
 import 'package:provider/provider.dart';

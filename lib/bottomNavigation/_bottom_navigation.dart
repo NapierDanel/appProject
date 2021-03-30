@@ -3,9 +3,9 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '_event_map.dart';
-import '_home.dart';
-import '_create_planiant_event.dart';
+import '../ui/views/_event_map.dart';
+import '../ui/views/_home.dart';
+import '../ui/views/_create_planiant_event.dart';
 
 class ButtonNavigation extends StatefulWidget {
   @override

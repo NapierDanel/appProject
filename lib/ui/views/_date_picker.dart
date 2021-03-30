@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_mobile_app_dev/bottomNavigation/_create_planiant_event.dart';
+import 'package:flutter_application_mobile_app_dev/ui/views/_create_planiant_event.dart';
 import 'package:intl/intl.dart';
 
 class DatePicker extends StatefulWidget {

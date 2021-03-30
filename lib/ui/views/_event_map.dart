@@ -2,12 +2,12 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_application_mobile_app_dev/bottomNavigation/_planiant_Event_Detail_Screen.dart';
-import 'package:flutter_application_mobile_app_dev/data/_firebase_planiant_event.dart';
+import 'package:flutter_application_mobile_app_dev/ui/views/_planiant_Event_Detail_Screen.dart';
+import 'package:flutter_application_mobile_app_dev/services/dataclasses/_firebase_planiant_event.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 
-import '../data/_db.dart';
+import '../../services/dataclasses/_db.dart';
 import '_create_planiant_event.dart';
 
 class EventMap extends StatelessWidget {

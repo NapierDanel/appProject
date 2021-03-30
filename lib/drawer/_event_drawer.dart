@@ -2,10 +2,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_mobile_app_dev/bottomNavigation/_bottom_navigation.dart';
-import 'package:flutter_application_mobile_app_dev/bottomNavigation/_home.dart';
+import 'package:flutter_application_mobile_app_dev/ui/views/_home.dart';
 import 'package:flutter_application_mobile_app_dev/drawer/_login.dart';
-import 'package:flutter_application_mobile_app_dev/drawer/profile/_my_profile.dart';
 import 'package:flutter_application_mobile_app_dev/init/my_app.dart';
+import 'package:flutter_application_mobile_app_dev/ui/views/profile/_my_profile.dart';
 
 import '_settings.dart';
 
