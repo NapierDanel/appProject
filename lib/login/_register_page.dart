@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_mobile_app_dev/data/_user.dart';
+import 'package:flutter_application_mobile_app_dev/init/my_app.dart';
 import 'package:flutter_application_mobile_app_dev/login/_home_page.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -107,7 +108,9 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: TextFormField(
                       validator: (value) {
-                        if (value.isEmpty || !value.contains('@') || !value.contains('.')) {
+                        if (value.isEmpty ||
+                            !value.contains('@') ||
+                            !value.contains('.')) {
                           return 'Please enter a valid email.';
                         }
                         return null;
@@ -171,8 +174,15 @@ class _RegisterPageState extends State<RegisterPage> {
                             emailTextEditController.text.toString(),
                             passwordTextEditController.text.toString(),
                             userNameTextEditController.text.toString());
+                        final snackBar = SnackBar(
+                            content: Text('User ' +
+                                userNameTextEditController.text +
+                                " created"));
 
-                            Navigator.pop(context);
+                        Navigator.pop(
+                            context, MaterialPageRoute(builder: (context) => MyApp()));
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
                       },
                       padding: EdgeInsets.all(12),
                       color: Colors.orange,
@@ -195,5 +205,4 @@ class _RegisterPageState extends State<RegisterPage> {
               ))),
     );
   }
-
 }
