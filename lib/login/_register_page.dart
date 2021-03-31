@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_application_mobile_app_dev/data/_user.dart';
+import 'package:flutter_application_mobile_app_dev/drawer/profile/_my_profile.dart';
 import 'package:flutter_application_mobile_app_dev/init/my_app.dart';
 import 'package:flutter_application_mobile_app_dev/login/_home_page.dart';
 
@@ -180,8 +181,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   userNameTextEditController.text +
                                   " created"));
 
-
-
+                          Navigator.pop(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MyProfilePage()));
                         }
                       },
                       padding: EdgeInsets.all(12),
