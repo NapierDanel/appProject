@@ -170,19 +170,19 @@ class _RegisterPageState extends State<RegisterPage> {
                         borderRadius: BorderRadius.circular(24),
                       ),
                       onPressed: () {
-                        PlaniantUser.createPlaniantUser(
-                            emailTextEditController.text.toString(),
-                            passwordTextEditController.text.toString(),
-                            userNameTextEditController.text.toString());
-                        final snackBar = SnackBar(
-                            content: Text('User ' +
-                                userNameTextEditController.text +
-                                " created"));
+                        if (_formKey.currentState.validate()) {
+                          PlaniantUser.createPlaniantUser(
+                              emailTextEditController.text.toString(),
+                              passwordTextEditController.text.toString(),
+                              userNameTextEditController.text.toString());
+                          final snackBar = SnackBar(
+                              content: Text('User ' +
+                                  userNameTextEditController.text +
+                                  " created"));
 
-                        Navigator.pop(
-                            context, MaterialPageRoute(builder: (context) => MyApp()));
-                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
+
+                        }
                       },
                       padding: EdgeInsets.all(12),
                       color: Colors.orange,
