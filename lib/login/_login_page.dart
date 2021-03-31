@@ -109,6 +109,7 @@ class _LoginPageState extends State<LoginPage> {
             signIn(emailController.text, passwordController.text)
                 .catchError((error) => {processError(error)})
                 .then((uid) => {
+                  print(uid),
                       PlaniantUser.initPlaniantUser(uid),
                       Navigator.pop(context)
                     });

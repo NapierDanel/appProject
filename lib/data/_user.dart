@@ -39,9 +39,11 @@ class PlaniantUser {
 
   static initPlaniantUser(String userId) async {
     PlaniantUser.planiantUser.id = userId;
+    print("User: " + userId);
     var rawUser = await _usersCollectionReference.doc(userId).get();
 
     PlaniantUser.fromData(rawUser.data());
+    print(PlaniantUser.getPlaniantUserInstance().toJson());
   }
 
   static createPlaniantUser(
@@ -56,8 +58,10 @@ class PlaniantUser {
       getPlaniantUserInstance().email = emailInput;
       getPlaniantUserInstance().userName = userNameInput;
       getPlaniantUserInstance().id = userCredential.user.uid;
-      getPlaniantUserInstance().organizedPlaniantEvents = [];
-      getPlaniantUserInstance().acceptedPlaniantEvents = [];
+      getPlaniantUserInstance().organizedPlaniantEvents = List<String>();
+      getPlaniantUserInstance().organizedPlaniantEvents.add("initParty");
+      getPlaniantUserInstance().acceptedPlaniantEvents = List<String>();
+      getPlaniantUserInstance().acceptedPlaniantEvents.add("initParty");
       print("Created: " + emailInput);
 
       _usersCollectionReference
@@ -74,6 +78,13 @@ class PlaniantUser {
     } catch (e) {
       print(e);
     }
+  }
+
+  updateUserImagePath(String path){
+    PlaniantUser.getPlaniantUserInstance().imgPath = path;
+    _usersCollectionReference
+        .doc(getPlaniantUserInstance().id)
+        .update(planiantUser.toJson());
   }
 
   addAcceptPlaniantEvent(String id) {
@@ -114,7 +125,7 @@ class PlaniantUser {
         userName = data['userName'],
         email = data['email'],
         imgPath = data['imgPath'] ?? 'No image path',
-        acceptedPlaniantEvents = data['acceptedPlaniantEvents'] ?? 'No events',
+        acceptedPlaniantEvents = List.from(data['acceptedPlaniantEvents']) ?? 'No events',
         organizedPlaniantEvents =
-            data['organizedPlaniantEvents'] ?? 'No events';
+            List.from(data['organizedPlaniantEvents']) ?? 'No events';
 }

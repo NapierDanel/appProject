@@ -74,7 +74,7 @@ class MyProfileStage extends State<MyProfilePage> {
                     },
                   ),
                   Text(
-                    _currentUser?.displayName ?? 'No User name set',
+                    PlaniantUser.getPlaniantUserInstance().userName ?? 'No User name set',
                     style: TextStyle(fontSize: 30, color: Colors.white),
                   ),
                 ],
@@ -96,7 +96,7 @@ class MyProfileStage extends State<MyProfilePage> {
                       },
                       decoration: InputDecoration(
                         hintText:
-                            _currentUser?.displayName ?? 'Insert Username ',
+                            PlaniantUser.getPlaniantUserInstance().userName ?? 'Insert Username ',
                         contentPadding:
                             EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                         border: OutlineInputBorder(
@@ -164,6 +164,7 @@ class MyProfileStage extends State<MyProfilePage> {
     List<PlaniantEvent> favEvents = [];
 
     for(PlaniantEvent planiantEvent in planiantEvents){
+      print("PlaniantEvent Build List View: " + planiantEvent.id);
       if(PlaniantUser.getPlaniantUserInstance().acceptedPlaniantEvents.contains(planiantEvent.id)){
         favEvents.add(planiantEvent);
       }
@@ -206,7 +207,7 @@ class MyProfileStage extends State<MyProfilePage> {
     try {
       imageUrl = await storage.getDownloadURL();
       String userName = _currentUser.displayName;
-
+      PlaniantUser.getPlaniantUserInstance().updateUserImagePath(imageUrl);
       _currentUser.updateProfile(displayName: userName, photoURL: imageUrl);
     } catch (onError) {
       print("Error");

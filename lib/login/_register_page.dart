@@ -107,7 +107,7 @@ class _RegisterPageState extends State<RegisterPage> {
                     padding: EdgeInsets.symmetric(vertical: 8.0),
                     child: TextFormField(
                       validator: (value) {
-                        if (value.isEmpty || !value.contains('@')) {
+                        if (value.isEmpty || !value.contains('@') || !value.contains('.')) {
                           return 'Please enter a valid email.';
                         }
                         return null;
