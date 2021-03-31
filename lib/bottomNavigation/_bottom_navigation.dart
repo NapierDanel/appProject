@@ -22,7 +22,7 @@ class ButtonNavigationState extends State<ButtonNavigation> {
     Home(),
     EventMap(),
     Text(
-      'Index 2: School',
+      'in progress',
       style: optionStyle,
     )
   ];
