@@ -26,13 +26,12 @@ class PlaniantEventDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: ListView(children: [
-
         /// Image Section
         FutureBuilder<String>(
 
-          /// load the event image from firebase
+            /// load the event image from firebase
             future:
-            _getStoragePlaniantEventImageURL(planiantEvent.id.toString()),
+                _getStoragePlaniantEventImageURL(planiantEvent.id.toString()),
             builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
               if (snapshot.hasData) {
                 this.planiantEventImage = Image.network(
@@ -43,13 +42,12 @@ class PlaniantEventDetailScreen extends StatelessWidget {
                       return child;
                     }
                     return Center(
-
                       /// Show the progress of loading
                       heightFactor: 300,
                       child: CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
                             ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes
+                                loadingProgress.expectedTotalBytes
                             : null,
                       ),
                     );
@@ -72,21 +70,21 @@ class PlaniantEventDetailScreen extends StatelessWidget {
               } else if (!snapshot.hasData) {
                 return SizedBox(
                     child: Image.asset(
-                      noImageSvgPath,
-                      height: 200,
-                      width: 300,
-                      color: Colors.blue,
-                      scale: 3,
-                    ));
+                  noImageSvgPath,
+                  height: 200,
+                  width: 300,
+                  color: Colors.blue,
+                  scale: 3,
+                ));
               } else if (snapshot.hasError) {
                 return Text('Failure Loading Even Image');
               } else {
                 return SizedBox(
                     child: Image.asset(
-                      noImageSvgPath,
-                      height: 200,
-                      width: 300,
-                    ));
+                  noImageSvgPath,
+                  height: 200,
+                  width: 300,
+                ));
               }
             }),
 
@@ -121,8 +119,7 @@ class PlaniantEventDetailScreen extends StatelessWidget {
 
               /// When the user  Icon Button pressed
               IconButton(
-                onPressed: () =>
-                {
+                onPressed: () => {
                   addPlaniantEventToCalendar(planiantEvent),
                   SnackBar(content: Text('Event added to calendar')),
                 },
@@ -169,8 +166,8 @@ class PlaniantEventDetailScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               _choiceButtonColumn(
-                  Colors.lightGreenAccent, Icons.add, 'I AM IN'),
-              _choiceButtonColumn(Colors.redAccent, Icons.remove, 'I AM OUT'),
+                  Colors.lightGreenAccent, Icons.add, 'I AM IN', context),
+              _choiceButtonColumn(Colors.redAccent, Icons.remove, 'I AM OUT', context),
             ],
           ),
         ),
@@ -178,17 +175,26 @@ class PlaniantEventDetailScreen extends StatelessWidget {
     );
   }
 
-  GestureDetector _choiceButtonColumn(Color color, IconData icon,
-      String label) {
+  GestureDetector _choiceButtonColumn(
+      Color color, IconData icon, String label, BuildContext context) {
     return GestureDetector(
       onTap: () {
         if (FirebaseAuth.instance.currentUser != null) {
           if (label == 'I AM IN') {
-            PlaniantUser.getPlaniantUserInstance().addAcceptPlaniantEvent(planiantEvent.id);
+            PlaniantUser.getPlaniantUserInstance()
+                .addAcceptPlaniantEvent(planiantEvent.id);
+            final snackBar = SnackBar(content: Text('Added to Favorites'));
+
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
           if (label == 'I AM OUT') {
             print(FirebaseAuth.instance.currentUser);
-            PlaniantUser.getPlaniantUserInstance().removeAcceptPlaniantEvent(planiantEvent.id);
+            PlaniantUser.getPlaniantUserInstance()
+                .removeAcceptPlaniantEvent(planiantEvent.id);
+
+            final snackBar = SnackBar(content: Text('Removed from Favorites'));
+
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         } else {
           return null;
@@ -225,9 +231,9 @@ class PlaniantEventDetailScreen extends StatelessWidget {
       description: planiantEvent.planiantEventDescription,
       location: planiantEvent.planiantEventLocation,
       startDate:
-      DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventBeginDate),
+          DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventBeginDate),
       endDate:
-      DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventEndDate),
+          DateFormat("dd.MM.yyyy").parse(planiantEvent.planiantEventEndDate),
       alarmInterval: Duration(minutes: 30),
     );
 
@@ -255,12 +261,12 @@ class DetailImageScreen extends StatelessWidget {
       body: GestureDetector(
         child: Center(
             child: Hero(
-              tag: 'imageHero',
-              child: Container(
-                  child: PhotoView(
-                    imageProvider: image.image,
-                  )),
-            )),
+          tag: 'imageHero',
+          child: Container(
+              child: PhotoView(
+            imageProvider: image.image,
+          )),
+        )),
         onTap: () {
           Navigator.pop(context);
         },
