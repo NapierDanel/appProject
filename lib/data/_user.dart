@@ -40,10 +40,20 @@ class PlaniantUser {
   static initPlaniantUser(String userId) async {
     PlaniantUser.planiantUser.id = userId;
     print("User: " + userId);
+
     var rawUser = await _usersCollectionReference.doc(userId).get();
 
-    PlaniantUser.fromData(rawUser.data());
-    print(PlaniantUser.getPlaniantUserInstance().toJson());
+    print("raw User: " + rawUser.data().toString());
+
+    planiantUser = PlaniantUser.fromData(rawUser.data());
+
+    print("To Json: " +
+        PlaniantUser.getPlaniantUserInstance().toJson().toString());
+
+    print("Accepted  events:" +
+        PlaniantUser.getPlaniantUserInstance()
+            .acceptedPlaniantEvents
+            .toString());
   }
 
   static createPlaniantUser(
@@ -80,7 +90,7 @@ class PlaniantUser {
     }
   }
 
-  updateUserImagePath(String path){
+  updateUserImagePath(String path) {
     PlaniantUser.getPlaniantUserInstance().imgPath = path;
     _usersCollectionReference
         .doc(getPlaniantUserInstance().id)
@@ -90,7 +100,9 @@ class PlaniantUser {
   addAcceptPlaniantEvent(String id) {
     print(id);
 
-    if(!PlaniantUser.getPlaniantUserInstance().acceptedPlaniantEvents.contains(id)){
+    if (!PlaniantUser.getPlaniantUserInstance()
+        .acceptedPlaniantEvents
+        .contains(id)) {
       PlaniantUser.getPlaniantUserInstance().acceptedPlaniantEvents.add(id);
     }
 
@@ -99,15 +111,16 @@ class PlaniantUser {
         .update(planiantUser.toJson());
   }
 
-  removeAcceptPlaniantEvent(String id){
-    if(PlaniantUser.getPlaniantUserInstance().acceptedPlaniantEvents.contains(id)){
+  removeAcceptPlaniantEvent(String id) {
+    if (PlaniantUser.getPlaniantUserInstance()
+        .acceptedPlaniantEvents
+        .contains(id)) {
       PlaniantUser.getPlaniantUserInstance().acceptedPlaniantEvents.remove(id);
     }
 
     _usersCollectionReference
         .doc(getPlaniantUserInstance().id)
         .update(planiantUser.toJson());
-
   }
 
   Map<String, dynamic> toJson() {
@@ -121,11 +134,12 @@ class PlaniantUser {
   }
 
   PlaniantUser.fromData(Map<String, dynamic> data)
-      : id = data['id'],
-        userName = data['userName'],
-        email = data['email'],
-        imgPath = data['imgPath'] ?? 'No image path',
-        acceptedPlaniantEvents = List.from(data['acceptedPlaniantEvents']) ?? 'No events',
-        organizedPlaniantEvents =
+      : this.id = data['id'],
+        this.userName = data['userName'],
+        this.email = data['email'],
+        this.imgPath = data['imgPath'] ?? 'No image path',
+        this.acceptedPlaniantEvents =
+            List.from(data['acceptedPlaniantEvents']) ?? 'No events',
+        this.organizedPlaniantEvents =
             List.from(data['organizedPlaniantEvents']) ?? 'No events';
 }
